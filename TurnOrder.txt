@@ -1,0 +1,103 @@
+NEED HOME SQUARES - 
+Type Room, 
+connects to a single hallway, 
+used as starting locations,
+starting room can access hallway,
+hallway cannot access starting room
+
+All Six characters need to be created even if there are not six players
+
+Add an END TURN button
+===========================================================
+
+In GameController
+
+Determine Turn Order
+
+Start Game
+
+Disable Move, Suggest, Accuse, End Turn buttons for all Players
+
+Get Player in turn order (Start a loop through Players in turn order)
+
+	- CHECK POSITION
+	- IF in Starting Location (Room)
+		- Player needs to make a move (to hallway)
+		- Enable MOVE and ACCUSE buttons for Player
+
+	- IF in a Room
+		- check to see if you were moved to the Room by another Player (i.e. They made a suggestion)
+		- IF TRUE, player can Move, Suggest, or Accuse
+			- Enable MOVE, SUGGEST, and ACCUSE buttons for Player
+		- ELSE, Player needs to make a move
+			- IF all hallways connected to your room are blocked (have move than 0 occupants) AND there is no sercet passage (Non-Hallway Room connected to this Room)
+				- Player CANNOT Move or Suggest
+				- Enable ACCUSE and END TURN buttons for Player
+			- ELSE
+				- Enable MOVE and ACCUSE buttons for Player
+				
+	- IF in a Hallway (Room)
+		- Player needs to make a move
+		- Enable MOVE and ACCUSE buttons for Player
+
+
+	MOVE SEQUENCE (Click the MOVE button)
+	- Open Move Dialog
+	- Show list of possible moves
+	- Player selcets a Room
+	- Player clicks the "Move" button
+	- Move Dialog closes
+
+	- Disable MOVE button for Player
+	- Player is moved to selected Room (player's location is updated to new Room, Room's occupant list is updated)
+	- IF Room is a Hallway
+		- Enable END TURN button for Player
+	- ELSE (Room is a room)
+		- Enable SUGGEST button for Player
+
+	SUGGEST SEQUENCE (Click the SUGGEST button)
+	- Open Suggest Dialog
+	- Show Suspects and Weapons (Room for suggestion is Player's location)
+	- Player selects a Suspect
+	- Player selects a Weapon
+	- Player clicks the "Suggest" button
+	- Suggest Dialog closes
+
+	- Disable the SUGGEST button for Player
+	- Server moves the player who controls suggested Suspect to suggested Room
+	- Server runs a DisproveSuggestion sequence
+	- Player recieves a message telling them which card was disproved or that no one could disprove the suggestion
+	- Enable END TURN button for Player
+
+	
+	ACCUSE SEQUENCE (Click the ACCUSE button)
+	- Open Accuse Dialog (same as suggest dialog, except Room is not set to player's location)
+	- Show Suspects, Weapons, and Rooms
+	- Player selects a Suspect
+	- Player selects a Weapon
+	- Player selects a Room
+	- Player clicks the "Accuse" button
+	- Suggest Dialog closes
+	
+	- Disable ACCUSE button and MOVE & SUGGEST buttons if there are still enabled
+	- Server runs the checkAccusation sequence
+	- Player recieves message showing Case File Cards
+	- Player recieves message telling them if their Accusation is Correct
+		- IF TRUE, run the ENDGAME sequence
+		- ELSE (Player is wrong)
+			- Disable Player from game (remove from turn order)
+			- End their turn (bypass the END TURN button)
+			- Disable END TURN button for Player
+
+
+	END TURN SEQUENCE (Click the END TURN button)
+	- Disable any enabled buttons for Player (MOVE, SUGGEST, ACCUSE, END TURN)
+	- Move player loop to next Player in turn order.
+
+
+
+
+
+
+	
+	

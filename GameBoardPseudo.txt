@@ -1,0 +1,52 @@
+Moving a Player
+
+IF a Player's location is updated during the MOVE SEQUENCE
+
+	- Update "Old" Room's occupant list (i.e. oldRoom.removePlayer(Player))
+	- Set Player's location to new Room (i.e. player.location = newRoom)
+	- Update "New" Room's occupant list (i.e. newRoom.addPlayer(Player))
+
+	Need to update Player icon on game board to new position
+
+	need to have set positions to move PlayerSprites to for each room
+		Hallways needs just one position
+		Rooms need to have six different setups
+			- 1 PlayerSprite, 2 PlayerSprites, 3 PlayerSprites, etc.
+
+	Server will send player names and locations to ClientAppController, who passes to ClientGameBoard
+
+	Runnable Thread will constantlly update sprite locations
+
+	ClientGameBoard holds
+		- list of locations
+			- locations will hold
+				- occupants
+				- list of x,ys for each configuration of occupants
+				- method to update occupant position within location based on number of occupants
+	
+
+
+ClientGameBoard Class
+Will paint the background image
+loop through the PlayerSprites and update the locations (repaint)
+
+
+PlayerSprite Class
+painting sprites over gameboard
+https://coderanch.com/t/336043/java/Images-top
+http://zetcode.com/tutorials/javagamestutorial/movingsprites/
+	- holds
+		- x, y, dx, dy
+		- destX, destY // used to update sprite location so runnable thread can move them from current location to new location
+	
+
+
+
+get sprite
+get sprite X and Y
+get sprite dX and dY
+
+add X + dX, Y + dY
+
+if (x + sprite.width() > jpanel.width() || x < 0)
+	
