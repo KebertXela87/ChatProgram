@@ -10,9 +10,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientAppController
 {
+    private static Object obj = new Object();
     private ClientApp _clientApp;
 
     private Socket _socket;
@@ -84,21 +86,18 @@ public class ClientAppController
             @Override
             public void run()
             {
-                String msg = "";
                 while (_clientRunning)
                 {
                     try
                     {
                         if(!_socket.isClosed())
                         {
-                            msg = controller.getReader().readLine();
-
-                            controller.handleMessage(msg);
+                            controller.handleMessage(controller.getReader().readLine());
                         }
                     }
                     catch (IOException e)
                     {
-                        e.printStackTrace();
+                        System.out.println("Client Closed.");
                     }
                 }
             }
@@ -123,37 +122,27 @@ public class ClientAppController
         }
     }
 
-    public void clientCloseOperation(JFrame frame)
+    public void logout()
     {
-        frame.addWindowListener(new WindowAdapter()
+        try
         {
-            @Override
-            public void windowClosing(WindowEvent e)
+            // Close connection to server
+            if (_socket != null)
             {
-                try
-                {
-                    System.out.println("Closing Window...");
-                    // Close connection to server
-                    if(_socket != null)
-                    {
-                        System.out.println("Closing stream and socket...");
-                        _clientRunning = false;
-                        _socket.close();
-                        System.out.println("Closed streams and socket.");
-                    }
-                }
-                catch (IOException ex)
-                {
-                    ex.printStackTrace();
-                }
-
-                System.out.println("Exiting...");
-                // Close window
-                System.exit(0);
+                writeToServer("logoff");
+                _clientRunning = false;
+                _socket.close();
             }
-        });
+        }
+        catch (IOException ex)
+        {
+            System.out.println("Socket Exception");
+            ex.printStackTrace();
+        }
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        System.out.println("Exiting...");
+        // Close window
+        System.exit(0);
     }
 
     public void writeToServer(String message)

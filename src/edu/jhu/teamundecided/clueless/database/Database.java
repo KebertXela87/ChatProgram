@@ -1,5 +1,6 @@
 package edu.jhu.teamundecided.clueless.database;
 
+import javax.swing.plaf.basic.BasicScrollPaneUI;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -7,6 +8,8 @@ public class Database
 {
     private HashMap<String, String> _characterNames;
     private HashMap<String, Point> _startingLocations;
+    private HashMap<String, String> _roomNames;
+    private HashMap<String, String> _weaponNames;
 
     private static Database _database = null;
 
@@ -16,6 +19,8 @@ public class Database
     {
         setupCharacterNames();
         setupStartingLocations();
+        setupRoomNames();
+        setupWeaponNames();
     }
 
     public static Database getInstance()
@@ -54,26 +59,59 @@ public class Database
         return _characterNames.get(key);
     }
 
-    public Set getCharacterKeys()
-    {
-        return _characterNames.keySet();
-    }
+    public HashMap<String, String> getCharacterNames() { return _characterNames; }
 
     private void setupStartingLocations()
     {
         _startingLocations = new HashMap<>();
-        _startingLocations.put("mustard", new Point(50,50));
-        _startingLocations.put("scarlett", new Point(150,50));
-        _startingLocations.put("green", new Point(250,50));
-        _startingLocations.put("white", new Point(50,150));
-        _startingLocations.put("peacock", new Point(150,150));
-        _startingLocations.put("plum", new Point(250,150));
+        int awayFromEdge = 5;
+        int board = 800;
+        int spriteSize = 50;
+        _startingLocations.put("mustard", new Point(board - awayFromEdge - spriteSize,225));
+        _startingLocations.put("scarlett", new Point(525, awayFromEdge));
+        _startingLocations.put("green", new Point(225,board - awayFromEdge - spriteSize));
+        _startingLocations.put("white", new Point(525,board - awayFromEdge- spriteSize));
+        _startingLocations.put("peacock", new Point(awayFromEdge,525));
+        _startingLocations.put("plum", new Point(awayFromEdge,225));
     }
 
     public Point getStartingLocation(String key)
     {
         return _startingLocations.get(key);
     }
+
+    private void setupRoomNames()
+    {
+        _roomNames = new HashMap<>();
+        _roomNames.put("ballroom", "Ballroom");
+        _roomNames.put("billiardroom", "Billiard Room");
+        _roomNames.put("conservatory", "Conservatory");
+        _roomNames.put("diningroom", "Dining Room");
+        _roomNames.put("hall", "Hall");
+        _roomNames.put("kitchen", "Kitchen");
+        _roomNames.put("library", "Library");
+        _roomNames.put("lounge", "Lounge");
+        _roomNames.put("study", "Study");
+    }
+
+    public HashMap<String, String> getRoomNames() { return _roomNames; }
+
+    public String getRoomName(String key) { return _roomNames.get(key); }
+
+    private void setupWeaponNames()
+    {
+        _weaponNames = new HashMap<>();
+        _weaponNames.put("candlestick", "Candlestick");
+        _weaponNames.put("knife", "Knife");
+        _weaponNames.put("leadpipe", "Lead Pipe");
+        _weaponNames.put("revolver", "Revolver");
+        _weaponNames.put("rope", "Rope");
+        _weaponNames.put("wrench", "Wrench");
+    }
+
+    public HashMap<String, String> getWeaponNames() { return _weaponNames; }
+
+    public String getWeaponName(String key) { return _weaponNames.get(key); }
 
     public class Point
     {

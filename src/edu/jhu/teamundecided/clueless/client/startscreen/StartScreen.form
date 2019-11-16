@@ -44,7 +44,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value="192.168.0.13"/>
+            </properties>
           </component>
           <component id="1e5ac" class="javax.swing.JTextField" binding="_port">
             <constraints>
@@ -52,7 +54,9 @@
                 <preferred-size width="50" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <text value="8818"/>
+            </properties>
           </component>
           <component id="95a78" class="javax.swing.JButton" binding="_joinButton">
             <constraints>

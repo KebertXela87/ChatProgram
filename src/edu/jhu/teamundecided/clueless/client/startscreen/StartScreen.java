@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -53,6 +55,30 @@ public class StartScreen
                 }
 
                 cac.askForUserName();
+            }
+        });
+
+        _joinButton.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    _joinButton.doClick();
+                }
+            }
+        });
+
+        _port.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    _joinButton.doClick();
+                }
             }
         });
     }

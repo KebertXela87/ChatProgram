@@ -5,10 +5,7 @@ import edu.jhu.teamundecided.clueless.client.gameboard.PlayerSprite;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class ClientApp
 {
@@ -24,6 +21,8 @@ public class ClientApp
     private JButton _accusationButton;
     private JButton _notebookButton;
     private JPanel _mainPanel;
+    private JButton _endTurnButton;
+    private JButton _logoutButton;
 
     public ClientApp(ClientAppController controller)
     {
@@ -58,6 +57,15 @@ public class ClientApp
                 {
                     sprite.setDestX(sprite.getX() + 100);
                 }
+            }
+        });
+
+        _logoutButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.getFrame().dispatchEvent(new WindowEvent(controller.getFrame(), WindowEvent.WINDOW_CLOSING));
             }
         });
     }

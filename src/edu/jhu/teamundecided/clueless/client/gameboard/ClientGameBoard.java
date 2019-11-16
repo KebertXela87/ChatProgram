@@ -63,7 +63,7 @@ public class ClientGameBoard extends JPanel
 
     public void setupSprites()
     {
-        for (Object name : Database.getInstance().getCharacterKeys())
+        for (Object name : Database.getInstance().getCharacterNames().keySet())
         {
             addSprite((String) name);
         }

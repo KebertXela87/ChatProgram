@@ -1,9 +1,11 @@
 package edu.jhu.teamundecided.clueless.deck;
 
+import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DeckController
 {
@@ -13,6 +15,7 @@ public class DeckController
     private Deck _weaponDeck;
     private ArrayList<Deck> _decks;
     private Deck _FullDeck;
+    private Deck _suggestionDeck;
 
     // Card Lists
     private ArrayList<String> _Suspects;
@@ -23,13 +26,12 @@ public class DeckController
     public DeckController()
     {
         // create the card name lists - used to create the cards
-        _Suspects = new ArrayList<>(Arrays.asList("Mr._Green", "Col._Mustard", "Mrs._Peacock", "Prof._Plum",
-                "Ms._Scarlett", "Mrs._White"));
-        _Rooms = new ArrayList<>(Arrays.asList("Ballroom", "Kitchen", "Dining_Room", "Lounge", "Hall", "Study",
-                "Library", "Conservatory", "Billiard_Room"));
-        _Weapons = new ArrayList<>(Arrays.asList("Candle_Stick", "Dagger", "Lead_Pipe", "Revolver", "Rope", "Wrench"));
+        _Suspects = new ArrayList<>(Database.getInstance().getCharacterNames().keySet());
+        _Rooms = new ArrayList<>(Database.getInstance().getRoomNames().keySet());
+        _Weapons = new ArrayList<>(Database.getInstance().getWeaponNames().keySet());
 
         setupDecks();
+        buildSuggestionDeck();
         shuffleAllDecks();
         selectCaseFile();
         combineDecks();
@@ -108,11 +110,6 @@ public class DeckController
             }
         }
 
-//        for (Player player : players)
-//        {
-//            player.sendHandToClient();
-//        }
-
         // Deal successful
         return true;
     }
@@ -131,14 +128,17 @@ public class DeckController
         return true;
     }
 
+    public void buildSuggestionDeck()
+    {
+        _suggestionDeck = new Deck();
+
+        _suggestionDeck.addCardsFromDeck(new Deck(_Suspects, Card.CardType.Suspect));
+        _suggestionDeck.addCardsFromDeck(new Deck(_Rooms, Card.CardType.Room));
+        _suggestionDeck.addCardsFromDeck(new Deck(_Weapons, Card.CardType.Weapon));
+    }
+
     public Deck getSuggestionDeck()
     {
-        Deck suggestionDeck = new Deck();
-
-        suggestionDeck.addCardsFromDeck(new Deck(_Suspects, Card.CardType.Suspect));
-        suggestionDeck.addCardsFromDeck(new Deck(_Rooms, Card.CardType.Room));
-        suggestionDeck.addCardsFromDeck(new Deck(_Weapons, Card.CardType.Weapon));
-
-        return suggestionDeck;
+        return _suggestionDeck;
     }
 }
