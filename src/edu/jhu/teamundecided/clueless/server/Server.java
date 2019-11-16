@@ -1,8 +1,14 @@
 package edu.jhu.teamundecided.clueless.server;
 
+import edu.jhu.teamundecided.clueless.database.Database;
+
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 public class Server extends Thread
@@ -28,7 +34,42 @@ public class Server extends Thread
         _numConnections = 0;
 
         _serverApp = new ServerApp();
+        serverCloseOperation();
         _serverApp.writeToWindow("Welcome to the Server...");
+    }
+
+    public void serverCloseOperation()
+    {
+        _serverApp.getServerFrame().addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                try
+                {
+                    // Close connection to server
+                    if(_serverSocket != null)
+                    {
+                        Database.getInstance().setRunning(false);
+                        for (ClientHandler handler : _clients)
+                        {
+                            System.out.println("Closing socket for " + handler.getPlayer().getUserName());
+                            handler.writeToClient("serverclose");
+                        }
+                        _serverSocket.close();
+                    }
+                }
+                catch (IOException ex)
+                {
+                    ex.printStackTrace();
+                }
+
+                // Close window
+                System.exit(0);
+            }
+        });
+
+        _serverApp.getServerFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void run()
@@ -37,13 +78,25 @@ public class Server extends Thread
         {
             _serverSocket = new ServerSocket(8818);
 
-            while (_numConnections < 6)
+            while (Database.getInstance().getRunning())
             {
-                _socket = _serverSocket.accept();
+                if(_numConnections < 6)
+                {
+                    try
+                    {
+                        System.out.println("trying to accept connection");
+                        _socket = _serverSocket.accept();
+                        System.out.println("made connection");
+                        ClientHandler client = new ClientHandler(_socket, this);
 
-                ClientHandler client = new ClientHandler(_socket, this);
-
-                addHandler(client);
+                        addHandler(client);
+                    }
+                    catch (SocketException e)
+                    {
+                        System.out.println("Running?: " + Database.getInstance().getRunning());
+                        System.out.println("Server is closed. Accepting no more connections.");
+                    }
+                }
             }
         }
         catch (IOException e)
@@ -69,11 +122,4 @@ public class Server extends Thread
     {
         return _clients;
     }
-
-//    public static void main(String[] args)
-//    {
-//        Server server = new Server(8818);
-//
-//        server.start();
-//    }
 }

@@ -7,13 +7,19 @@ public class ServerApp extends JFrame
     private JTextArea _messageCenter;
     private JPanel _serverPanel;
 
+    private JFrame _frame;
+
     public ServerApp()
     {
-        JFrame frame = new JFrame("ServerApp");
-        frame.setContentPane(_serverPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        _frame = new JFrame("ServerApp");
+        _frame.setContentPane(_serverPanel);
+        _frame.pack();
+        _frame.setVisible(true);
+    }
+
+    public JFrame getServerFrame()
+    {
+        return _frame;
     }
 
     public void writeToWindow(String message)

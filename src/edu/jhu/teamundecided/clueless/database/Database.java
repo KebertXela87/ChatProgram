@@ -10,6 +10,8 @@ public class Database
 
     private static Database _database = null;
 
+    private boolean _running = true;
+
     public Database()
     {
         setupCharacterNames();
@@ -24,6 +26,16 @@ public class Database
         }
 
         return _database;
+    }
+
+    public boolean getRunning()
+    {
+        return _running;
+    }
+
+    public void setRunning(boolean value)
+    {
+        _running = value;
     }
 
     private void  setupCharacterNames()

@@ -18,4 +18,14 @@ public class Player
     {
         return _playerHand;
     }
+
+    public void setUserName(String name)
+    {
+        _userName = name;
+    }
+
+    public String getUserName()
+    {
+        return _userName;
+    }
 }

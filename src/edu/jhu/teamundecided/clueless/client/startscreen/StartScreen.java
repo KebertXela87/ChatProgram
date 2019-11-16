@@ -29,8 +29,7 @@ public class StartScreen
             public void actionPerformed(ActionEvent e)
             {
                 // Start Server
-                Server server = new Server(8818);
-                server.start();
+                cac.startServer();
 
                 if(!cac.connect("localhost", 8818))
                 {
@@ -38,12 +37,7 @@ public class StartScreen
                     System.exit(0);
                 }
 
-                cac.startReadMessageThread(cac);
-
-                cac.getFrame().setContentPane(cac.getClientApp().returnMainPanel());
-                cac.getFrame().pack();
-                cac.getFrame().setVisible(true);
-                cac.getClientApp().writeToScreen("Welcome User...");
+                cac.askForUserName();
             }
         });
 
@@ -58,12 +52,7 @@ public class StartScreen
                     System.exit(0);
                 }
 
-                cac.startReadMessageThread(cac);
-
-                cac.getFrame().setContentPane(cac.getClientApp().returnMainPanel());
-                cac.getFrame().pack();
-                cac.getFrame().setVisible(true);
-                cac.getClientApp().writeToScreen("Welcome User...");
+                cac.askForUserName();
             }
         });
     }
@@ -76,32 +65,5 @@ public class StartScreen
     private void createUIComponents()
     {
         logo = new Logo();
-    }
-
-    private class Logo extends JPanel
-    {
-        private Image _background;
-
-        public Logo()
-        {
-            File filename = new File("./src/images/startscreen.png");
-            try
-            {
-                this._background = ImageIO.read(filename);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            if (_background != null)
-            {
-                g.drawImage(_background,0,0,this);
-            }
-        }
     }
 }

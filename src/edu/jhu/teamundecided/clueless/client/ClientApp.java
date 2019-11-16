@@ -32,7 +32,7 @@ public class ClientApp
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                controller.writeToServer(_messageField.getText());
+                controller.writeToServer("chat:" + controller.getUserName() + " > " + _messageField.getText());
                 _messageField.setText(""); // clear text field
             }
         });

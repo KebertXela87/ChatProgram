@@ -13,7 +13,10 @@ public class ClueLess
         // Set Start Screen
         controller.getFrame().setContentPane(new StartScreen(controller).getMainPanel());
 
+        controller.getFrame().setResizable(false);
+
         controller.getFrame().pack();
+        controller.getFrame().setLocationRelativeTo(null);
         controller.getFrame().setVisible(true);
     }
 }
