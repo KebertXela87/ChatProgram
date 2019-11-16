@@ -31,6 +31,7 @@ public class ClientAppController
     {
         ClientAppController controller = new ClientAppController();
 
+        //TODO move this to a listener due to addition of StartScreen
         if(!controller.connect())
         {
             // connection failed
@@ -45,8 +46,7 @@ public class ClientAppController
         controller.getFrame().pack();
         controller.getFrame().setVisible(true);
 
-        controller.getClientApp().writeToScreen("Welcome User...");
-
+        //TODO move this to a listener with the Connect logic
         Thread readMessage = new Thread(new Runnable()
         {
             @Override

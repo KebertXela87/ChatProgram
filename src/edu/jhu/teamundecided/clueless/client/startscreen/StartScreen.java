@@ -31,6 +31,7 @@ public class StartScreen
                 cac.getFrame().setContentPane(cac.getClientApp().returnMainPanel());
                 cac.getFrame().pack();
                 cac.getFrame().setVisible(true);
+                cac.getClientApp().writeToScreen("Welcome User...");
             }
         });
     }
