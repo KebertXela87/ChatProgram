@@ -28,7 +28,7 @@ public class PlayerSprite
 
         try
         {
-            image = ImageIO.read(new File(_spritesFolder + name + ".png"));
+            image = ImageIO.read(new File(_spritesFolder + name + "_small.png"));
         }
         catch (IOException e)
         {
@@ -37,6 +37,10 @@ public class PlayerSprite
 
         _width = image.getWidth(null);
         _height = image.getHeight(null);
+
+        // set speed
+        dx = 1;
+        dy = 1;
     }
 
     public void paintSprite( Graphics g )
@@ -45,6 +49,12 @@ public class PlayerSprite
         {
             g.drawImage(image, x, y, null);
         }
+    }
+
+    public void move()
+    {
+        x += dx;
+        y += dy;
     }
 
     public int getX()
@@ -105,5 +115,11 @@ public class PlayerSprite
     public void setDestY(int _destY)
     {
         this._destY = _destY;
+    }
+
+    public void setInitDest()
+    {
+        this._destX = x;
+        this._destY = y;
     }
 }

@@ -1,5 +1,7 @@
 package edu.jhu.teamundecided.clueless.client.gameboard;
 
+import edu.jhu.teamundecided.clueless.database.Database;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,10 @@ public class ClientGameBoard extends JPanel
         sprites = new ArrayList<>();
 
         setupSprites();
+
+        // Start Sprite Runnable
+        Thread updateSprites = new Thread(new SpriteUpdate());
+        updateSprites.start();
     }
 
     @Override
@@ -45,27 +51,65 @@ public class ClientGameBoard extends JPanel
         }
     }
 
+    public Dimension getBackgroundSize()
+    {
+        Dimension dim = super.getPreferredSize();
+        if (_background != null)
+        {
+            dim = new Dimension(_background.getWidth(this), _background.getHeight(this));
+        }
+        return dim;
+    }
+
     public void setupSprites()
     {
-        addSprite("colmustard");
+        for (Object name : Database.getInstance().getCharacterKeys())
+        {
+            addSprite((String) name);
+        }
     }
 
     public void addSprite(String name)
     {
         PlayerSprite sprite = new PlayerSprite(name);
-        sprite.setX(100);
-        sprite.setY(100);
+        Database.Point loc = Database.getInstance().getStartingLocation(name);
+        sprite.setX(loc.getX());
+        sprite.setY(loc.getY());
+        sprite.setInitDest();
         sprites.add(sprite);
         repaint();
     }
 
-    public static void main(String[] args)
+    public ArrayList<PlayerSprite> getSprites()
     {
-        JFrame frame = new JFrame();
-        frame.setLayout(new FlowLayout());
-        frame.setSize(800, 800);
-        frame.setContentPane(new ClientGameBoard());
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        return sprites;
+    }
+
+    private class SpriteUpdate implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            while (true)
+            {
+                try
+                {
+                    Thread.sleep(80);
+                }
+                catch (InterruptedException e) {}
+
+//                Dimension gameboardSize = getBackgroundSize();
+
+                for (PlayerSprite sprite : sprites)
+                {
+                    //TODO update this demo code
+                    if (sprite.getX() != sprite.getDestX())
+                    {
+                        sprite.move();
+                    }
+                }
+                repaint();
+            }
+        }
     }
 }

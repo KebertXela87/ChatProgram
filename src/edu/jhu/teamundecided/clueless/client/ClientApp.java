@@ -1,6 +1,7 @@
 package edu.jhu.teamundecided.clueless.client;
 
 import edu.jhu.teamundecided.clueless.client.gameboard.ClientGameBoard;
+import edu.jhu.teamundecided.clueless.client.gameboard.PlayerSprite;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -44,6 +45,18 @@ public class ClientApp
                 if(e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
                     _sendButton.doClick();
+                }
+            }
+        });
+
+        _moveButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                for (PlayerSprite sprite : ((ClientGameBoard) _gameBoard).getSprites())
+                {
+                    sprite.setDestX(sprite.getX() + 100);
                 }
             }
         });

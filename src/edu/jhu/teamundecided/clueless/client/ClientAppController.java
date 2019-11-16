@@ -1,5 +1,7 @@
 package edu.jhu.teamundecided.clueless.client;
 
+import edu.jhu.teamundecided.clueless.client.startscreen.StartScreen;
+
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,11 +17,15 @@ public class ClientAppController
     private BufferedReader _reader; // Input from Server
     private BufferedWriter _writer; // Output to Server
 
+    private JFrame _frame;
+
     public ClientAppController()
     {
         this._clientApp = new ClientApp(this);
+        this._frame = new JFrame("ClueLess");
     }
 
+    public JFrame getFrame() { return this._frame; }
 
     public static void main(String[] args)
     {
@@ -31,13 +37,13 @@ public class ClientAppController
             System.exit(0);
         }
 
-        JFrame frame = new JFrame("ClueLess");
+        controller.clientCloseOperation(controller.getFrame());
 
-        controller.clientCloseOperation(frame);
+        // Set Start Screen
+        controller.getFrame().setContentPane(new StartScreen(controller).getMainPanel());
 
-        frame.setContentPane(controller.getClientApp().returnMainPanel());
-        frame.pack();
-        frame.setVisible(true);
+        controller.getFrame().pack();
+        controller.getFrame().setVisible(true);
 
         controller.getClientApp().writeToScreen("Welcome User...");
 
@@ -121,5 +127,5 @@ public class ClientAppController
         return _reader;
     }
 
-    private ClientApp getClientApp() { return _clientApp; }
+    public ClientApp getClientApp() { return _clientApp; }
 }
