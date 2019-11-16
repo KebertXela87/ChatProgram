@@ -1,6 +1,7 @@
 package edu.jhu.teamundecided.clueless.client.startscreen;
 
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
+import edu.jhu.teamundecided.clueless.server.Server;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,7 +28,38 @@ public class StartScreen
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("Clicked the HOST button...");
+                // Start Server
+                Server server = new Server(8818);
+                server.start();
+
+                if(!cac.connect("localhost", 8818))
+                {
+                    // connection failed
+                    System.exit(0);
+                }
+
+                cac.startReadMessageThread(cac);
+
+                cac.getFrame().setContentPane(cac.getClientApp().returnMainPanel());
+                cac.getFrame().pack();
+                cac.getFrame().setVisible(true);
+                cac.getClientApp().writeToScreen("Welcome User...");
+            }
+        });
+
+        _joinButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(!cac.connect(_ipAddress.getText(), Integer.parseInt(_port.getText())))
+                {
+                    // connection failed
+                    System.exit(0);
+                }
+
+                cac.startReadMessageThread(cac);
+
                 cac.getFrame().setContentPane(cac.getClientApp().returnMainPanel());
                 cac.getFrame().pack();
                 cac.getFrame().setVisible(true);

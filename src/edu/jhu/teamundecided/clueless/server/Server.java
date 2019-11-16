@@ -70,10 +70,10 @@ public class Server extends Thread
         return _clients;
     }
 
-    public static void main(String[] args)
-    {
-        Server server = new Server(8818);
-
-        server.start();
-    }
+//    public static void main(String[] args)
+//    {
+//        Server server = new Server(8818);
+//
+//        server.start();
+//    }
 }

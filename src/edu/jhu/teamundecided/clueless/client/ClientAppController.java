@@ -27,26 +27,26 @@ public class ClientAppController
 
     public JFrame getFrame() { return this._frame; }
 
-    public static void main(String[] args)
+    public boolean connect(String ipaddress, int port)
     {
-        ClientAppController controller = new ClientAppController();
-
-        //TODO move this to a listener due to addition of StartScreen
-        if(!controller.connect())
+        try
         {
-            // connection failed
-            System.exit(0);
+            _socket = new Socket(ipaddress, port);
+            _reader = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
+            _writer = new BufferedWriter(new OutputStreamWriter(_socket.getOutputStream()));
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
 
-        controller.clientCloseOperation(controller.getFrame());
+        return false;
+    }
 
-        // Set Start Screen
-        controller.getFrame().setContentPane(new StartScreen(controller).getMainPanel());
-
-        controller.getFrame().pack();
-        controller.getFrame().setVisible(true);
-
-        //TODO move this to a listener with the Connect logic
+    public void startReadMessageThread(ClientAppController controller)
+    {
         Thread readMessage = new Thread(new Runnable()
         {
             @Override
@@ -75,25 +75,7 @@ public class ClientAppController
         readMessage.start();
     }
 
-    private boolean connect()
-    {
-        try
-        {
-            _socket = new Socket("localhost", 8818);
-            _reader = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
-            _writer = new BufferedWriter(new OutputStreamWriter(_socket.getOutputStream()));
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    private void clientCloseOperation(JFrame frame)
+    public void clientCloseOperation(JFrame frame)
     {
         frame.addWindowListener(new WindowAdapter()
         {
