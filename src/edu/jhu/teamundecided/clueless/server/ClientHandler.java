@@ -1,5 +1,6 @@
 package edu.jhu.teamundecided.clueless.server;
 
+import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.io.*;
@@ -76,10 +77,29 @@ public class ClientHandler extends Thread
             case "user":
                 setUserName(tokens[1]);
                 break;
+            case "getmoves":
+                getPossibleMoves(tokens[1]);
+                break;
+            case "character":
+                setPlayerCharacter(tokens[1]);
+                break;
+            case "getDisabledCharacters":
+                getDisableCharacterList();
+                break;
             case "logoff":
-                handleLoggoff();
+                handleLoggoff(tokens[1]);
                 break;
         }
+    }
+
+    private void getDisableCharacterList()
+    {
+        StringBuilder list = new StringBuilder("disableCharacter");
+        for (ClientHandler client : _server.getCients())
+        {
+            list.append(":").append(client.getPlayer().getCharacterName());
+        }
+        broadcast(list.toString());
     }
 
     public void broadcast(String message)
@@ -95,7 +115,27 @@ public class ClientHandler extends Thread
         _player.setUserName(name);
     }
 
-    public void handleLoggoff()
+    private void getPossibleMoves(String name)
+    {
+        StringBuilder moves = new StringBuilder("moves");
+        for (String roomname : _player.getLocation().getPossibleMoves())
+        {
+            moves.append(":" + roomname);
+        }
+        writeToClient(moves.toString());
+    }
+
+    private void setPlayerCharacter(String name)
+    {
+        System.out.println("setting player " + _player.getUserName() + " to " + name);
+        _player.setCharacterName(name);
+        for (ClientHandler client : _server.getCients())
+        {
+            client.writeToClient("disableCharacter:" + name);
+        }
+    }
+
+    public void handleLoggoff(String name)
     {
         _server.removeHandler(this);
         try
@@ -107,6 +147,7 @@ public class ClientHandler extends Thread
         {
             e.printStackTrace();
         }
+        broadcast(name + " has logged off.");
     }
 
     public BufferedWriter getWriter()

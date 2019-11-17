@@ -1,8 +1,10 @@
 package edu.jhu.teamundecided.clueless.database;
 
-import javax.swing.plaf.basic.BasicScrollPaneUI;
+import edu.jhu.teamundecided.clueless.server.Server;
+
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Database
 {
@@ -11,9 +13,15 @@ public class Database
     private HashMap<String, String> _roomNames;
     private HashMap<String, String> _weaponNames;
 
+    private ArrayList<String> _disabledCharacters;
+
+    private Server _gameServer;
+
     private static Database _database = null;
 
     private boolean _running = true;
+
+    private ReentrantLock lock = new ReentrantLock();
 
     public Database()
     {
@@ -21,7 +29,10 @@ public class Database
         setupStartingLocations();
         setupRoomNames();
         setupWeaponNames();
+        _disabledCharacters = new ArrayList<>();
     }
+
+    public ReentrantLock getLock() { return lock; }
 
     public static Database getInstance()
     {
@@ -42,6 +53,10 @@ public class Database
     {
         _running = value;
     }
+
+    public Server getGameServer() { return _gameServer; }
+
+    public void setGameServer(Server server) { _gameServer = server; }
 
     private void  setupCharacterNames()
     {
@@ -112,6 +127,11 @@ public class Database
     public HashMap<String, String> getWeaponNames() { return _weaponNames; }
 
     public String getWeaponName(String key) { return _weaponNames.get(key); }
+
+    public synchronized ArrayList<String> getDisabledCharacters()
+    {
+        return _disabledCharacters;
+    }
 
     public class Point
     {

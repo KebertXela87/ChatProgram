@@ -48,15 +48,20 @@ public class ClientApp
             }
         });
 
+        // MOVE BUTTON
         _moveButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                for (PlayerSprite sprite : ((ClientGameBoard) _gameBoard).getSprites())
-                {
-                    sprite.setDestX(sprite.getX() + 100);
-                }
+                // send message to server to get possible room locations
+                controller.writeToServer("getmoves:" + controller.getUserName());
+
+                // create dialog
+                moveDialog dialog = new moveDialog(controller);
+                dialog.setLocationRelativeTo(controller.getFrame());
+                dialog.pack();
+                dialog.setVisible(true);
             }
         });
 

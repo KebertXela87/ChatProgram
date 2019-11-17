@@ -25,7 +25,7 @@ public class UserName
                 cac.setUserName(_userName.getText());
                 cac.writeToServer("user:" + cac.getUserName());
 
-                cac.startClient();
+                cac.askForCharacterSelect();
             }
         });
 

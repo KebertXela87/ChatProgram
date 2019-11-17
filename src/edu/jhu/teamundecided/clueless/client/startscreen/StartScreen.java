@@ -1,17 +1,12 @@
 package edu.jhu.teamundecided.clueless.client.startscreen;
 
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
-import edu.jhu.teamundecided.clueless.server.Server;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 
 public class StartScreen
 {

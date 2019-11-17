@@ -1,21 +1,17 @@
 package edu.jhu.teamundecided.clueless.client;
 
-import edu.jhu.teamundecided.clueless.client.startscreen.StartScreen;
 import edu.jhu.teamundecided.clueless.client.startscreen.UserName;
 import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.server.Server;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ClientAppController
 {
-    private static Object obj = new Object();
     private ClientApp _clientApp;
+    private characterSelect _characterSelect;
 
     private Socket _socket;
     private BufferedReader _reader; // Input from Server
@@ -30,6 +26,7 @@ public class ClientAppController
     public ClientAppController()
     {
         this._clientApp = new ClientApp(this);
+        this._characterSelect = new characterSelect(this);
         this._frame = new JFrame("ClueLess");
     }
 
@@ -43,6 +40,7 @@ public class ClientAppController
             _reader = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
             _writer = new BufferedWriter(new OutputStreamWriter(_socket.getOutputStream()));
 
+            startReadMessageThread(this);
             return true;
         }
         catch (IOException e)
@@ -58,12 +56,11 @@ public class ClientAppController
         // Start Server
         Server server = new Server(8818);
         server.start();
+        Database.getInstance().setGameServer(server);
     }
 
     public void startClient()
     {
-        startReadMessageThread(this);
-
         _frame.setContentPane(_clientApp.returnMainPanel());
         _frame.pack();
         _frame.setLocationRelativeTo(null);
@@ -74,6 +71,15 @@ public class ClientAppController
     public void askForUserName()
     {
         _frame.setContentPane(new UserName(this).getMainPanel());
+        _frame.pack();
+        _frame.setLocationRelativeTo(null);
+        _frame.setVisible(true);
+    }
+
+    public void askForCharacterSelect()
+    {
+        writeToServer("getDisabledCharacters");
+        _frame.setContentPane(new characterSelect(this).getSelectionPanel());
         _frame.pack();
         _frame.setLocationRelativeTo(null);
         _frame.setVisible(true);
@@ -108,7 +114,10 @@ public class ClientAppController
 
     public void handleMessage(String message) throws IOException
     {
-        switch(message)
+        System.out.println("Client Message: " + message);
+        String[] tokens = message.split(":", 2);
+
+        switch(tokens[0])
         {
             case "serverclose":
                 Database.getInstance().setRunning(false);
@@ -117,9 +126,26 @@ public class ClientAppController
                 _socket.close();
                 getClientApp().writeToScreen("Server Closed!");
                 break;
+            case "disableCharacter":
+                addToClientDisabledCharacterList(tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }
+    }
+
+    private void addToClientDisabledCharacterList(String list)
+    {
+        Database.getInstance().getLock().lock();
+        if (!list.equals(""))
+        {
+            String[] tokens = list.split(":");
+            for (String token : tokens)
+            {
+                Database.getInstance().getDisabledCharacters().add(token);
+            }
+        }
+        Database.getInstance().getLock().unlock();
     }
 
     public void logout()
@@ -129,7 +155,7 @@ public class ClientAppController
             // Close connection to server
             if (_socket != null)
             {
-                writeToServer("logoff");
+                writeToServer("logoff:" + _userName);
                 _clientRunning = false;
                 _socket.close();
             }
@@ -165,6 +191,8 @@ public class ClientAppController
     }
 
     public ClientApp getClientApp() { return _clientApp; }
+
+    public characterSelect getCharacterSelect() { return _characterSelect; }
 
     public void setUserName(String name)
     {
