@@ -54,7 +54,6 @@ public class characterSelect
                         {
                             if (_buttons.get(key).isEnabled())
                             {
-                                System.out.println("Disabling button = " + key);
                                 _buttons.get(key).setEnabled(false);
                             }
                         }

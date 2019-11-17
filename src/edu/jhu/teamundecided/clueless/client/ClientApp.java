@@ -5,6 +5,7 @@ import edu.jhu.teamundecided.clueless.client.gameboard.PlayerSprite;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import java.awt.*;
 import java.awt.event.*;
 
 public class ClientApp
@@ -55,7 +56,7 @@ public class ClientApp
             public void actionPerformed(ActionEvent e)
             {
                 // send message to server to get possible room locations
-                controller.writeToServer("getmoves:" + controller.getUserName());
+//                controller.writeToServer("getmoves:" + controller.getUserName());
 
                 // create dialog
                 moveDialog dialog = new moveDialog(controller);
@@ -83,6 +84,8 @@ public class ClientApp
     }
 
     public JPanel returnMainPanel() { return _mainPanel; }
+
+    public Component[] getControlButtons() { return _controls.getComponents(); }
 
     private void createUIComponents()
     {

@@ -1,6 +1,7 @@
 package edu.jhu.teamundecided.clueless.client;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class moveDialog extends JDialog
@@ -55,6 +56,13 @@ public class moveDialog extends JDialog
     private void onOK(ClientAppController cac)
     {
         // add your code here
+        for(Component c : cac.getClientApp().getControlButtons())
+        {
+            if(c.getName() != null && c.getName().equals("move"))
+            {
+                c.setEnabled(false);
+            }
+        }
         dispose();
     }
 
