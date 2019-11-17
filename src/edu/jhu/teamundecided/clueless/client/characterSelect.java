@@ -27,25 +27,12 @@ public class characterSelect
 
     public characterSelect(ClientAppController cac)
     {
-        for (String key : Database.getInstance().getCharacterNames().keySet())
-        {
-            _buttons.get(key).addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    cac.writeToServer("character:" + key);
-                    cac.startClient();
-                }
-            });
-        }
-
-        Thread selecting = new Thread(new Runnable()
+        SwingWorker sw = new SwingWorker()
         {
             @Override
-            public void run()
+            protected Object doInBackground() throws Exception
             {
-                while (true)
+                while (!this.isCancelled())
                 {
                     Database.getInstance().getLock().lock();
                     if(Database.getInstance().getDisabledCharacters().size() > 0)
@@ -60,10 +47,57 @@ public class characterSelect
                     }
                     Database.getInstance().getLock().unlock();
                 }
+                return null;
             }
-        });
 
-        selecting.start();
+            @Override
+            protected void done()
+            {
+                super.done();
+                cac.writeToServer("Exited Character Select loop - " + cac.getUserName());
+            }
+        };
+
+        sw.execute();
+
+        for (String key : Database.getInstance().getCharacterNames().keySet())
+        {
+            _buttons.get(key).addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    cac.writeToServer("character:" + key);
+                    cac.startClient();
+                    sw.cancel(true);
+                }
+            });
+        }
+
+//        Thread selecting = new Thread(new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                while (true)
+//                {
+//                    Database.getInstance().getLock().lock();
+//                    if(Database.getInstance().getDisabledCharacters().size() > 0)
+//                    {
+//                        for (String key : Database.getInstance().getDisabledCharacters())
+//                        {
+//                            if (_buttons.get(key).isEnabled())
+//                            {
+//                                _buttons.get(key).setEnabled(false);
+//                            }
+//                        }
+//                    }
+//                    Database.getInstance().getLock().unlock();
+//                }
+//            }
+//        });
+//
+//        selecting.start();
     }
 
     private void createUIComponents()
