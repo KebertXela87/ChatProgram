@@ -1,0 +1,91 @@
+
+public GameBoard()
+{
+	File file = new File("<path/to/gameboard.txt>");
+	
+	BufferedReader readGameboard = new BufferedReader(new FileReader(file));
+
+	if(!readGameboard.readLine().equals("Rooms:")
+	{
+		throw new IllegalGameBoardFormatException();
+	}
+
+	// Init Rooms
+	while (true)
+	{
+		String roomline = readGameboard.readLine().trim();
+		if(roomline.equals("==="))
+		{
+			break; // end of room list
+		}
+		rooms.add(new Room(roomline));
+	}
+
+	// Init connections
+	if(!readGameboard.readLine().equals("Room Connections:"))
+	{
+		throw new IllegalGameBoardFormatException();
+	}
+
+	while (true)
+	{
+		String[] roomAdjacentList = readGameboard.readLine().tirm().split(":", 2);
+		if (roomAdjacentList[0].equals("==="))
+		{
+			break; // end of adjacent list
+		}
+
+		for (String i = 1; i < roomAdjacentList.size(); i++)
+		{
+			getRoom(roomAdgacentList[0]).setAdjacentRooms(roomAdgacentList[1], this);
+		}
+	}
+
+	readGameboard.close();
+}
+
+
+In Room.java:
+
+public Room(String roomline)
+{
+	String[] roomparameters = roomline.split(":");
+	_roomName = roomparameters[0];
+	_isHall = Boolean.parseBoolean(roomparameters[1]);
+	_adjacentRooms = new ArrayList<>();
+	_occupants = new ArrayList<>();
+}
+
+public void setAdjacentRooms(String roomlist, GameBoard gb)
+{
+	String[] adjacentRooms = roomlist.split(":");
+	for (String room : adjacentRooms)
+	{
+		this._adjacentRooms.add(gb.getRoom(room));
+	}
+}
+
+
+
+Sample Room File:
+
+Rooms:
+scarlettstartloc:false
+mustardstartloc:false
+ballroom:false
+hall:false
+conservatory:false
+hallway1:true
+hallway2:true
+===
+Room Connections:
+scarlettstartloc:hallway2
+mustardstartloc:hallway5
+hall:hallway1:hallway2
+ballroom:hallway6:hallway7
+hallway1:hall:lounge
+===
+
+
+
+
