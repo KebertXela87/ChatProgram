@@ -4,14 +4,15 @@ import edu.jhu.teamundecided.clueless.server.Server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Database
 {
-    private HashMap<String, String> _characterNames;
+    private LinkedHashMap<String, String> _characterNames;
     private HashMap<String, Point> _startingLocations;
-    private HashMap<String, String> _roomNames;
-    private HashMap<String, String> _weaponNames;
+    private LinkedHashMap<String, String> _roomNames;
+    private LinkedHashMap<String, String> _weaponNames;
 
     private ArrayList<String> _disabledCharacters;
 
@@ -60,13 +61,13 @@ public class Database
 
     private void  setupCharacterNames()
     {
-        _characterNames = new HashMap<>();
-        _characterNames.put("mustard", "Col. Mustard");
-        _characterNames.put("scarlett", "Ms. Scarlett");
+        _characterNames = new LinkedHashMap<>();
         _characterNames.put("green", "Mr. Green");
-        _characterNames.put("white", "Mr. White");
+        _characterNames.put("mustard", "Col. Mustard");
         _characterNames.put("peacock", "Mrs. Peacock");
         _characterNames.put("plum", "Prof. Plum");
+        _characterNames.put("scarlett", "Ms. Scarlett");
+        _characterNames.put("white", "Mr. White");
     }
 
     public String getCharacterName(String key)
@@ -74,20 +75,20 @@ public class Database
         return _characterNames.get(key);
     }
 
-    public HashMap<String, String> getCharacterNames() { return _characterNames; }
+    public LinkedHashMap<String, String> getCharacterNames() { return _characterNames; }
 
     private void setupStartingLocations()
     {
-        _startingLocations = new HashMap<>();
+        _startingLocations = new LinkedHashMap<>();
         int awayFromEdge = 5;
         int board = 800;
         int spriteSize = 50;
-        _startingLocations.put("mustard", new Point(board - awayFromEdge - spriteSize,225));
-        _startingLocations.put("scarlett", new Point(525, awayFromEdge));
         _startingLocations.put("green", new Point(225,board - awayFromEdge - spriteSize));
-        _startingLocations.put("white", new Point(525,board - awayFromEdge- spriteSize));
+        _startingLocations.put("mustard", new Point(board - awayFromEdge - spriteSize,225));
         _startingLocations.put("peacock", new Point(awayFromEdge,525));
         _startingLocations.put("plum", new Point(awayFromEdge,225));
+        _startingLocations.put("scarlett", new Point(525, awayFromEdge));
+        _startingLocations.put("white", new Point(525,board - awayFromEdge- spriteSize));
     }
 
     public Point getStartingLocation(String key)
@@ -97,7 +98,7 @@ public class Database
 
     private void setupRoomNames()
     {
-        _roomNames = new HashMap<>();
+        _roomNames = new LinkedHashMap<>();
         _roomNames.put("ballroom", "Ballroom");
         _roomNames.put("billiardroom", "Billiard Room");
         _roomNames.put("conservatory", "Conservatory");
@@ -109,13 +110,13 @@ public class Database
         _roomNames.put("study", "Study");
     }
 
-    public HashMap<String, String> getRoomNames() { return _roomNames; }
+    public LinkedHashMap<String, String> getRoomNames() { return _roomNames; }
 
     public String getRoomName(String key) { return _roomNames.get(key); }
 
     private void setupWeaponNames()
     {
-        _weaponNames = new HashMap<>();
+        _weaponNames = new LinkedHashMap<>();
         _weaponNames.put("candlestick", "Candlestick");
         _weaponNames.put("knife", "Knife");
         _weaponNames.put("leadpipe", "Lead Pipe");
@@ -124,7 +125,7 @@ public class Database
         _weaponNames.put("wrench", "Wrench");
     }
 
-    public HashMap<String, String> getWeaponNames() { return _weaponNames; }
+    public LinkedHashMap<String, String> getWeaponNames() { return _weaponNames; }
 
     public String getWeaponName(String key) { return _weaponNames.get(key); }
 

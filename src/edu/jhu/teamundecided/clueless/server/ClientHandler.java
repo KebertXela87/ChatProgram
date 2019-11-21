@@ -79,6 +79,9 @@ public class ClientHandler extends Thread
             case "getmoves":
                 getPossibleMoves(tokens[1]);
                 break;
+            case "getSuggestRoom":
+                getSuggestionRoom(tokens[1]);
+                break;
             case "character":
                 setPlayerCharacter(tokens[1]);
                 break;
@@ -89,6 +92,15 @@ public class ClientHandler extends Thread
                 handleLoggoff(tokens[1]);
                 break;
         }
+    }
+
+    private void getSuggestionRoom(String token)
+    {
+        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
+//        writeToClient("suggestDialog:" + _player.getLocation().getRoomName());
+
+        // DEMO CODE
+        writeToClient("suggestDialog:hall");
     }
 
     private void getDisableCharacterList()

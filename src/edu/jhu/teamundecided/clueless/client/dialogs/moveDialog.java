@@ -3,7 +3,6 @@ package edu.jhu.teamundecided.clueless.client.dialogs;
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -19,6 +18,8 @@ public class moveDialog extends JDialog
 
     private String filepath = "./src/images/cards/rooms/200w/";
 
+    private String _moveSelection = "";
+
     public moveDialog(ClientAppController cac)
     {
         setContentPane(contentPane);
@@ -30,7 +31,7 @@ public class moveDialog extends JDialog
         {
             public void actionPerformed(ActionEvent e)
             {
-                onOK(cac);
+                onMove(cac);
             }
         });
 
@@ -69,22 +70,24 @@ public class moveDialog extends JDialog
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
+                    _moveSelection = button.getName();
                     _moveButton.setEnabled(true);
                 }
             });
         }
     }
 
-    private void onOK(ClientAppController cac)
+    private void onMove(ClientAppController cac)
     {
-        // add your code here
-        for(Component c : cac.getClientApp().getControlButtons())
-        {
-            if(c.getName() != null && c.getName().equals("move"))
-            {
-                c.setEnabled(false);
-            }
-        }
+        StringBuilder move = new StringBuilder("move:");
+        move.append(_moveSelection);
+
+//        cac.writeToServer(move.toString());
+        System.out.println(move.toString());
+
+        cac.getClientApp().getMoveButton().setEnabled(false);
+        cac.getClientApp().getSuggestButton().setEnabled(true);
+
         dispose();
     }
 

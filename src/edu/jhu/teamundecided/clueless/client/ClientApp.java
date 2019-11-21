@@ -61,6 +61,16 @@ public class ClientApp
             }
         });
 
+        // SUGGEST BUTTON
+        _suggestButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.writeToServer("getSuggestRoom:" + controller.getUserName());
+            }
+        });
+
         _logoutButton.addActionListener(new ActionListener()
         {
             @Override
@@ -81,6 +91,26 @@ public class ClientApp
     public JPanel returnMainPanel() { return _mainPanel; }
 
     public Component[] getControlButtons() { return _controls.getComponents(); }
+
+    public JButton getMoveButton()
+    {
+        return _moveButton;
+    }
+
+    public JButton getSuggestButton()
+    {
+        return _suggestButton;
+    }
+
+    public JButton getAccusationButton()
+    {
+        return _accusationButton;
+    }
+
+    public JButton getEndTurnButton()
+    {
+        return _endTurnButton;
+    }
 
     private void createUIComponents()
     {

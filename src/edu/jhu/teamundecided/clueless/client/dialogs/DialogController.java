@@ -24,10 +24,10 @@ public class DialogController
     private String _moveOptions;
     private ArrayList<JRadioButton> moveList;
 
-    public DialogController()
-    {
+    private String _suggestionRoom;
 
-    }
+    public DialogController()
+    {}
 
     /// MOVE DIALOG LOGIC
     public void createMoveDialog(ClientAppController controller, String moveOptions)
@@ -63,6 +63,7 @@ public class DialogController
         {
             JRadioButton temp = new JRadioButton(new ImageIcon(filepath + option + ".jpg"));
             temp.setSelectedIcon(new ImageIcon(filepath + option + "Selected.jpg"));
+            temp.setName(option);
             moveButtonGroup.add(temp);
             moveList.add(temp);
             movePanel.add(temp);
@@ -89,6 +90,16 @@ public class DialogController
     }
 
     /// SUGGEST DIALOG LOGIC
+    public void createSuggestDialog(ClientAppController controller, String room)
+    {
+        _suggestionRoom = room;
+        suggestDialog dialog = new suggestDialog(controller);
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.pack();
+        dialog.setVisible(true);
+    }
+
+    public String getSuggestionRoom() { return _suggestionRoom; }
 
     /// ACCUSE DIALOG LOGIC
 }

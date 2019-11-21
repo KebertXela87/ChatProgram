@@ -134,6 +134,9 @@ public class ClientAppController
             case "moveDialog":
                 DialogController.getInstance().createMoveDialog(this, tokens[1]);
                 break;
+            case "suggestDialog":
+                DialogController.getInstance().createSuggestDialog(this, tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }
