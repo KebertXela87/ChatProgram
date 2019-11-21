@@ -1,6 +1,5 @@
 package edu.jhu.teamundecided.clueless.server;
 
-import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.io.*;
@@ -117,12 +116,16 @@ public class ClientHandler extends Thread
 
     private void getPossibleMoves(String name)
     {
-        StringBuilder moves = new StringBuilder("moves");
-        for (String roomname : _player.getLocation().getPossibleMoves())
-        {
-            moves.append(":" + roomname);
-        }
-        writeToClient(moves.toString());
+        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
+//        StringBuilder moves = new StringBuilder("moveDialog");
+//        for (String roomname : _player.getLocation().getPossibleMoves())
+//        {
+//            moves.append(":" + roomname);
+//        }
+//        writeToClient(moves.toString());
+
+        // DEMO CODE
+        writeToClient("moveDialog:study:study:study");
     }
 
     private void setPlayerCharacter(String name)

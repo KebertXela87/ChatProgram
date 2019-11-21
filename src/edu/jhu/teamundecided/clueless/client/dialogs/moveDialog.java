@@ -1,23 +1,32 @@
-package edu.jhu.teamundecided.clueless.client;
+package edu.jhu.teamundecided.clueless.client.dialogs;
+
+import edu.jhu.teamundecided.clueless.client.ClientAppController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class moveDialog extends JDialog
 {
     private JPanel contentPane;
-    private JButton buttonOK;
-    private JButton buttonCancel;
+    private JButton _moveButton;
+    private JButton _cancelButton;
     private JPanel _locationPanel;
+    private JRadioButton radioButton1;
+
+    private ArrayList<JRadioButton> _moveButtonList;
+
+    private String filepath = "./src/images/cards/rooms/200w/";
 
     public moveDialog(ClientAppController cac)
     {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(_moveButton);
+        _moveButton.setEnabled(false);
 
-        buttonOK.addActionListener(new ActionListener()
+        _moveButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -25,7 +34,7 @@ public class moveDialog extends JDialog
             }
         });
 
-        buttonCancel.addActionListener(new ActionListener()
+        _cancelButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -51,6 +60,19 @@ public class moveDialog extends JDialog
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        // Add Listeners
+        for(JRadioButton button : DialogController.getInstance().getMoveList())
+        {
+            button.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    _moveButton.setEnabled(true);
+                }
+            });
+        }
     }
 
     private void onOK(ClientAppController cac)
@@ -70,5 +92,10 @@ public class moveDialog extends JDialog
     {
         // add your code here if necessary
         dispose();
+    }
+
+    private void createUIComponents()
+    {
+        _locationPanel = DialogController.getInstance().getMovePanel();
     }
 }

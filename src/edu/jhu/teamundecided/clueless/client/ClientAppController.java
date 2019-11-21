@@ -1,6 +1,8 @@
 package edu.jhu.teamundecided.clueless.client;
 
+import edu.jhu.teamundecided.clueless.client.dialogs.DialogController;
 import edu.jhu.teamundecided.clueless.client.startscreen.UserName;
+import edu.jhu.teamundecided.clueless.client.startscreen.characterSelect;
 import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.server.Server;
 
@@ -128,6 +130,9 @@ public class ClientAppController
                 break;
             case "disableCharacter":
                 addToClientDisabledCharacterList(tokens[1]);
+                break;
+            case "moveDialog":
+                DialogController.getInstance().createMoveDialog(this, tokens[1]);
                 break;
             default:
                 getClientApp().writeToScreen(message);

@@ -1,5 +1,6 @@
-package edu.jhu.teamundecided.clueless.client;
+package edu.jhu.teamundecided.clueless.client.startscreen;
 
+import edu.jhu.teamundecided.clueless.client.ClientAppController;
 import edu.jhu.teamundecided.clueless.database.Database;
 
 import javax.imageio.ImageIO;
@@ -73,31 +74,6 @@ public class characterSelect
                 }
             });
         }
-
-//        Thread selecting = new Thread(new Runnable()
-//        {
-//            @Override
-//            public void run()
-//            {
-//                while (true)
-//                {
-//                    Database.getInstance().getLock().lock();
-//                    if(Database.getInstance().getDisabledCharacters().size() > 0)
-//                    {
-//                        for (String key : Database.getInstance().getDisabledCharacters())
-//                        {
-//                            if (_buttons.get(key).isEnabled())
-//                            {
-//                                _buttons.get(key).setEnabled(false);
-//                            }
-//                        }
-//                    }
-//                    Database.getInstance().getLock().unlock();
-//                }
-//            }
-//        });
-//
-//        selecting.start();
     }
 
     private void createUIComponents()
