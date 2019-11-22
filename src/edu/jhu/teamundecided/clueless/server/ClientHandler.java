@@ -82,6 +82,9 @@ public class ClientHandler extends Thread
             case "getSuggestRoom":
                 getSuggestionRoom(tokens[1]);
                 break;
+            case "getPlayerHand":
+                getPlayerHand(tokens[1]);
+                break;
             case "character":
                 setPlayerCharacter(tokens[1]);
                 break;
@@ -92,6 +95,15 @@ public class ClientHandler extends Thread
                 handleLoggoff(tokens[1]);
                 break;
         }
+    }
+
+    private void getPlayerHand(String token)
+    {
+        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
+//        writeToClient("playerHandDialog" + _player.getPlayerHand().toString());
+
+        // DEMO CODE
+        writeToClient("playerHandDialog:hall:mustard:scarlett:rope:knife:ballroom");
     }
 
     private void getSuggestionRoom(String token)

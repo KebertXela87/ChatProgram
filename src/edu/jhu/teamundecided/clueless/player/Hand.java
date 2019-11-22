@@ -46,4 +46,16 @@ public class Hand
 
         System.out.println();
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder hand = new StringBuilder();
+        for(Card card : _cards)
+        {
+            hand.append(":" + card.getCardName());
+        }
+
+        return hand.toString();
+    }
 }

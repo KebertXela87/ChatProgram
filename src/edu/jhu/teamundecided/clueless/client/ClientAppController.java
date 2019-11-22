@@ -137,6 +137,9 @@ public class ClientAppController
             case "suggestDialog":
                 DialogController.getInstance().createSuggestDialog(this, tokens[1]);
                 break;
+            case "playerHandDialog":
+                DialogController.getInstance().createPlayerHandDialog(this, tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }

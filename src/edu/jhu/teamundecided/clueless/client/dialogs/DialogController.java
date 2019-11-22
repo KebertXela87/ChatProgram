@@ -2,8 +2,10 @@ package edu.jhu.teamundecided.clueless.client.dialogs;
 
 import edu.jhu.teamundecided.clueless.client.ClientApp;
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
+import edu.jhu.teamundecided.clueless.database.Database;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class DialogController
@@ -26,6 +28,9 @@ public class DialogController
     private ArrayList<JRadioButton> moveList;
 
     private String _suggestionRoom;
+
+    private playerHandDialog _playerDialog = null;
+    private String _playerHand;
 
     public DialogController()
     {}
@@ -115,5 +120,73 @@ public class DialogController
         dialog.setResizable(false);
         dialog.pack();
         dialog.setVisible(true);
+    }
+
+    /// PLAYER HAND PANEL
+    public void createPlayerHandDialog(ClientAppController controller, String hand)
+    {
+        // Check to see if hand has changed
+        if(_playerDialog != null)
+        {
+            if (!_playerHand.equals(hand))
+            {
+                _playerDialog.dispose();
+            }
+            else
+            {
+                _playerDialog.toFront();
+                return;
+            }
+        }
+
+        setPlayerHandCards(hand);
+        _playerDialog = new playerHandDialog();
+        _playerDialog.setLocationRelativeTo(controller.getFrame());
+        _playerDialog.setModal(false);
+        _playerDialog.setTitle("Player Hand");
+        _playerDialog.setResizable(false);
+        _playerDialog.pack();
+        _playerDialog.setVisible(true);
+    }
+
+    public JPanel getPlayerHandPanel()
+    {
+        String[] cards = getPlayerHandCards().split(":");
+
+        JPanel playerHandPanel = new JPanel();
+
+        for (String card : cards)
+        {
+            String localFilePath = "./src/images/cards/";
+            if(Database.getInstance().getCharacterNames().keySet().contains(card))
+            {
+                localFilePath += "suspects/250w/";
+            }
+            else if(Database.getInstance().getWeaponNames().keySet().contains(card))
+            {
+                localFilePath += "weapons/250w/";
+            }
+            else if(Database.getInstance().getRoomNames().keySet().contains(card))
+            {
+                localFilePath += "rooms/200w/";
+            }
+
+            JLabel temp = new JLabel(new ImageIcon(localFilePath + card + ".jpg"));
+            playerHandPanel.add(temp);
+        }
+
+        return playerHandPanel;
+    }
+
+    private String getPlayerHandCards() { return _playerHand; }
+
+    public void setPlayerHandCards(String cards)
+    {
+        _playerHand = cards;
+    }
+
+    public void setPlayerDialogNull()
+    {
+        _playerDialog = null;
     }
 }

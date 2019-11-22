@@ -15,7 +15,6 @@ public class ClientApp
     private JTextField _messageField;
     private JButton _sendButton;
     private JPanel _chatPanel;
-    private JPanel _playerHand;
     private JPanel _gameBoard;
     private JPanel _controls;
     private JButton _moveButton;
@@ -25,6 +24,7 @@ public class ClientApp
     private JPanel _mainPanel;
     private JButton _endTurnButton;
     private JButton _logoutButton;
+    private JButton _handButton;
 
     public ClientApp(ClientAppController controller)
     {
@@ -78,6 +78,26 @@ public class ClientApp
             public void actionPerformed(ActionEvent e)
             {
                 DialogController.getInstance().createAccuseDialog(controller);
+            }
+        });
+
+        // PLAYER HAND BUTTON
+        _handButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.writeToServer("getPlayerHand:" + controller.getUserName());
+            }
+        });
+
+        // NOTEBOOK BUTTON
+        _notebookButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+
             }
         });
 
