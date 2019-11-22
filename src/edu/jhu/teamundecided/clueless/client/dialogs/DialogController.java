@@ -1,5 +1,6 @@
 package edu.jhu.teamundecided.clueless.client.dialogs;
 
+import edu.jhu.teamundecided.clueless.client.ClientApp;
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
 
 import javax.swing.*;
@@ -35,6 +36,8 @@ public class DialogController
         setMoveOptions(moveOptions);
         moveDialog dialog = new moveDialog(controller);
         dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setTitle("Make an Move!");
+        dialog.setResizable(false);
         dialog.pack();
         dialog.setVisible(true);
     }
@@ -95,6 +98,8 @@ public class DialogController
         _suggestionRoom = room;
         suggestDialog dialog = new suggestDialog(controller);
         dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setTitle("Make an Suggestion!");
+        dialog.setResizable(false);
         dialog.pack();
         dialog.setVisible(true);
     }
@@ -102,4 +107,13 @@ public class DialogController
     public String getSuggestionRoom() { return _suggestionRoom; }
 
     /// ACCUSE DIALOG LOGIC
+    public void createAccuseDialog(ClientAppController controller)
+    {
+        accuseDialog dialog = new accuseDialog(controller);
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setTitle("Make an Accusation!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setVisible(true);
+    }
 }

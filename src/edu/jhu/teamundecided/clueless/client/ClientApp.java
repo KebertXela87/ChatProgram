@@ -71,6 +71,16 @@ public class ClientApp
             }
         });
 
+        // ACCUSE BUTTON
+        _accusationButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                DialogController.getInstance().createAccuseDialog(controller);
+            }
+        });
+
         _logoutButton.addActionListener(new ActionListener()
         {
             @Override
