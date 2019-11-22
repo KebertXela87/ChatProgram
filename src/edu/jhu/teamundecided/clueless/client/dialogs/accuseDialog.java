@@ -123,7 +123,7 @@ public class accuseDialog extends JDialog
                 {
                     if(_suspectComboBox.getSelectedItem().toString().equals(Database.getInstance().getCharacterName(key)))
                     {
-                        name = "suspects/250w/" + key + ".jpg";
+                        name = "suspects/" + key + ".jpg";
                         _suspectSelected = key;
                     }
                 }
@@ -144,7 +144,7 @@ public class accuseDialog extends JDialog
                 {
                     if(_weaponComboBox.getSelectedItem().toString().equals(Database.getInstance().getWeaponName(key)))
                     {
-                        name = "weapons/250w/" + key + ".jpg";
+                        name = "weapons/" + key + ".jpg";
                         _weaponSelected = key;
                     }
                 }
@@ -165,7 +165,7 @@ public class accuseDialog extends JDialog
                 {
                     if(_roomComboBox.getSelectedItem().toString().equals(Database.getInstance().getRoomName(key)))
                     {
-                        name = "rooms/200w/" + key + ".jpg";
+                        name = "rooms/" + key + ".jpg";
                         _roomSelected = key;
                     }
                 }

@@ -14,10 +14,6 @@ public class moveDialog extends JDialog
     private JPanel _locationPanel;
     private JRadioButton radioButton1;
 
-    private ArrayList<JRadioButton> _moveButtonList;
-
-    private String filepath = "./src/images/cards/rooms/200w/";
-
     private String _moveSelection = "";
 
     public moveDialog(ClientAppController cac)

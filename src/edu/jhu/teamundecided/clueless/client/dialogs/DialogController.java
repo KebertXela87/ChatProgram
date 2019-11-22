@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DialogController
 {
-    private String filepath = "./src/images/cards/rooms/200w/";
+    private String _cardFilepath = "./src/images/cards/";
 
     private static DialogController _dialogController = null;
 
@@ -40,10 +40,10 @@ public class DialogController
     {
         setMoveOptions(moveOptions);
         moveDialog dialog = new moveDialog(controller);
-        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setTitle("Make an Move!");
         dialog.setResizable(false);
         dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setVisible(true);
     }
 
@@ -69,8 +69,8 @@ public class DialogController
 
         for (String option : options)
         {
-            JRadioButton temp = new JRadioButton(new ImageIcon(filepath + option + ".jpg"));
-            temp.setSelectedIcon(new ImageIcon(filepath + option + "Selected.jpg"));
+            JRadioButton temp = new JRadioButton(new ImageIcon(_cardFilepath + "rooms/" + option + ".jpg"));
+            temp.setSelectedIcon(new ImageIcon(_cardFilepath + "rooms/selected/" + option + "Selected.jpg"));
             temp.setName(option);
             moveButtonGroup.add(temp);
             moveList.add(temp);
@@ -102,10 +102,10 @@ public class DialogController
     {
         _suggestionRoom = room;
         suggestDialog dialog = new suggestDialog(controller);
-        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setTitle("Make an Suggestion!");
         dialog.setResizable(false);
         dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setVisible(true);
     }
 
@@ -115,10 +115,10 @@ public class DialogController
     public void createAccuseDialog(ClientAppController controller)
     {
         accuseDialog dialog = new accuseDialog(controller);
-        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setTitle("Make an Accusation!");
         dialog.setResizable(false);
         dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
         dialog.setVisible(true);
     }
 
@@ -141,11 +141,11 @@ public class DialogController
 
         setPlayerHandCards(hand);
         _playerDialog = new playerHandDialog();
-        _playerDialog.setLocationRelativeTo(controller.getFrame());
         _playerDialog.setModal(false);
         _playerDialog.setTitle("Player Hand");
         _playerDialog.setResizable(false);
         _playerDialog.pack();
+        _playerDialog.setLocationRelativeTo(controller.getFrame());
         _playerDialog.setVisible(true);
     }
 
@@ -157,21 +157,21 @@ public class DialogController
 
         for (String card : cards)
         {
-            String localFilePath = "./src/images/cards/";
+            _cardFilepath = "./src/images/cards/";
             if(Database.getInstance().getCharacterNames().keySet().contains(card))
             {
-                localFilePath += "suspects/250w/";
+                _cardFilepath += "suspects/";
             }
             else if(Database.getInstance().getWeaponNames().keySet().contains(card))
             {
-                localFilePath += "weapons/250w/";
+                _cardFilepath += "weapons/";
             }
             else if(Database.getInstance().getRoomNames().keySet().contains(card))
             {
-                localFilePath += "rooms/200w/";
+                _cardFilepath += "rooms/";
             }
 
-            JLabel temp = new JLabel(new ImageIcon(localFilePath + card + ".jpg"));
+            JLabel temp = new JLabel(new ImageIcon(_cardFilepath + card + ".jpg"));
             playerHandPanel.add(temp);
         }
 

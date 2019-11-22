@@ -18,7 +18,7 @@ public class suggestDialog extends JDialog
     private JLabel _roomIcon;
     private JLabel _roomLabel;
 
-    private String _filename = "./src/images/cards/";
+    private String _cardFilepath = "./src/images/cards/";
 
     private String _suspectSelected = "";
     private String _weaponSelected = "";
@@ -70,76 +70,7 @@ public class suggestDialog extends JDialog
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         setupComboBoxes();
-
-        _suspectComboBox.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                String name = "unknown.png";
-                for(String key : Database.getInstance().getCharacterNames().keySet())
-                {
-                    if(_suspectComboBox.getSelectedItem().toString().equals(Database.getInstance().getCharacterName(key)))
-                    {
-                        name = "suspects/250w/" + key + ".jpg";
-                        _suspectSelected = key;
-                    }
-                }
-
-                _suspectIcon.setIcon(new ImageIcon(_filename + name));
-
-                if(_weaponComboBox.getSelectedIndex() == 0 || _suspectComboBox.getSelectedIndex() == 0)
-                {
-                    _suggestButton.setEnabled(false);
-                }
-                else
-                {
-                    _suggestButton.setEnabled(true);
-                }
-            }
-        });
-
-        _weaponComboBox.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                String name = "unknown.png";
-                for(String key : Database.getInstance().getWeaponNames().keySet())
-                {
-                    if(_weaponComboBox.getSelectedItem().toString().equals(Database.getInstance().getWeaponName(key)))
-                    {
-                        name = "weapons/250w/" + key + ".jpg";
-                        _weaponSelected = key;
-                    }
-                }
-
-                _weaponIcon.setIcon(new ImageIcon(_filename + name));
-
-                if(_weaponComboBox.getSelectedIndex() == 0 || _suspectComboBox.getSelectedIndex() == 0)
-                {
-                    _suggestButton.setEnabled(false);
-                }
-                else
-                {
-                    _suggestButton.setEnabled(true);
-                }
-            }
-        });
-    }
-
-    private void setupComboBoxes()
-    {
-        _suspectComboBox.addItem("Select Suspect...");
-        _weaponComboBox.addItem("Select Weapon...");
-        for(String suspect : Database.getInstance().getCharacterNames().values())
-        {
-            _suspectComboBox.addItem(suspect);
-        }
-        for(String weapon : Database.getInstance().getWeaponNames().values())
-        {
-            _weaponComboBox.addItem(weapon);
-        }
+        setupComboBoxListeners();
     }
 
     private void onSuggest(ClientAppController cac)
@@ -164,9 +95,80 @@ public class suggestDialog extends JDialog
         dispose();
     }
 
+    private void setupComboBoxes()
+    {
+        _suspectComboBox.addItem("Select Suspect...");
+        _weaponComboBox.addItem("Select Weapon...");
+        for(String suspect : Database.getInstance().getCharacterNames().values())
+        {
+            _suspectComboBox.addItem(suspect);
+        }
+        for(String weapon : Database.getInstance().getWeaponNames().values())
+        {
+            _weaponComboBox.addItem(weapon);
+        }
+    }
+
+    private void setupComboBoxListeners()
+    {
+        _suspectComboBox.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String name = "unknown.png";
+                for(String key : Database.getInstance().getCharacterNames().keySet())
+                {
+                    if(_suspectComboBox.getSelectedItem().toString().equals(Database.getInstance().getCharacterName(key)))
+                    {
+                        name = "suspects/" + key + ".jpg";
+                        _suspectSelected = key;
+                    }
+                }
+
+                _suspectIcon.setIcon(new ImageIcon(_cardFilepath + name));
+
+                setSuggestButtonState();
+            }
+        });
+
+        _weaponComboBox.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String name = "unknown.png";
+                for(String key : Database.getInstance().getWeaponNames().keySet())
+                {
+                    if(_weaponComboBox.getSelectedItem().toString().equals(Database.getInstance().getWeaponName(key)))
+                    {
+                        name = "weapons/" + key + ".jpg";
+                        _weaponSelected = key;
+                    }
+                }
+
+                _weaponIcon.setIcon(new ImageIcon(_cardFilepath + name));
+
+                setSuggestButtonState();
+            }
+        });
+    }
+
+    private void setSuggestButtonState()
+    {
+        if(_suspectComboBox.getSelectedIndex() == 0 || _weaponComboBox.getSelectedIndex() == 0)
+        {
+            _suggestButton.setEnabled(false);
+        }
+        else
+        {
+            _suggestButton.setEnabled(true);
+        }
+    }
+
     private void createUIComponents()
     {
         String suggestionRoom = DialogController.getInstance().getSuggestionRoom();
-        _roomIcon = new JLabel(new ImageIcon(_filename + "rooms/200w/" + suggestionRoom + ".jpg"));
+        _roomIcon = new JLabel(new ImageIcon(_cardFilepath + "rooms/" + suggestionRoom + ".jpg"));
     }
 }

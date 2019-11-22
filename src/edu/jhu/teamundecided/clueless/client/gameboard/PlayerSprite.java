@@ -20,7 +20,7 @@ public class PlayerSprite
     private int _width;
     private int _height;
 
-    private String _spritesFolder = "./src/images/gameboard/sprites/";
+    private String _spritesFolder = "./src/images/gameboard/sprites/small/";
 
     public PlayerSprite(String name)
     {
