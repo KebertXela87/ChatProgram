@@ -11,6 +11,7 @@ public class Database
     private HashMap<String, Point> _startingLocations;
     private LinkedHashMap<String, String> _roomNames;
     private LinkedHashMap<String, String> _weaponNames;
+    private HashMap<String, String> _hallwayDirections;
 
     private ArrayList<String> _disabledCharacters;
 
@@ -24,6 +25,7 @@ public class Database
         setupStartingLocations();
         setupRoomNames();
         setupWeaponNames();
+        setupHallwayDirections();
         _disabledCharacters = new ArrayList<>();
     }
 
@@ -112,5 +114,30 @@ public class Database
     public synchronized ArrayList<String> getDisabledCharacters()
     {
         return _disabledCharacters;
+    }
+
+    private void setupHallwayDirections()
+    {
+        _hallwayDirections = new HashMap<>();
+        _hallwayDirections.put("ballroom", "hallway_9,north:hallway_11,west:hallway_12,east");
+        _hallwayDirections.put("billiardroom", "hallway_4,north:hallway_6,west:hallway_7,east:hallway_9,south");
+        _hallwayDirections.put("conservatory", "hallway_8,north:hallway_11,east");
+        _hallwayDirections.put("diningroom", "hallway_5,north:hallway_7,west:hallway_10,south");
+        _hallwayDirections.put("hall", "hallway_1,west:hallway_2,east:hallway_4,south");
+        _hallwayDirections.put("kitchen", "hallway_10,north:hallway_12,west");
+        _hallwayDirections.put("library", "hallway_3,north:hallway_6,east:hallway_8,south");
+        _hallwayDirections.put("lounge", "hallway_2,west:hallway_5,south");
+        _hallwayDirections.put("study", "hallway_1,east:hallway_3,south");
+        _hallwayDirections.put("ScarlettStartLoc", "hallway_2,south");
+        _hallwayDirections.put("MustardStartLoc", "hallway_5,west");
+        _hallwayDirections.put("GreenStartLoc", "hallway_11,north");
+        _hallwayDirections.put("PeacockStartLoc", "hallway_8,east");
+        _hallwayDirections.put("WhiteStartLoc", "hallway_12,north");
+        _hallwayDirections.put("PlumStartLoc", "hallway_3,east");
+    }
+
+    public String getHallwayDirections(String key)
+    {
+        return _hallwayDirections.get(key);
     }
 }

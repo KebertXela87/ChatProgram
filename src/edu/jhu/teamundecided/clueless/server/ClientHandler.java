@@ -161,10 +161,17 @@ public class ClientHandler extends Thread
 //        {
 //            moves.append(":" + roomname);
 //        }
+//
+//        if(_player.getLocation().getIsHall())
+//        {
+//            moves.append("#").append(database.getHallwayDirections(_player.getLocation().getRoomName()));
+//        }
 //        writeToClient(moves.toString());
 
+        // Hallway Directions
+
         // DEMO CODE
-        writeToClient("moveDialog:study:study:study");
+        writeToClient("moveDialog:hallway_1:hallway_2:hallway_4#" + database.getHallwayDirections("hall"));
     }
 
     public void updateLocations(String roomname)

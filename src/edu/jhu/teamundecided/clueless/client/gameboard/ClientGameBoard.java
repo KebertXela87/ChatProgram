@@ -94,7 +94,7 @@ public class ClientGameBoard extends JPanel
             {
                 try
                 {
-                    Thread.sleep(80);
+                    Thread.sleep(25);
                 }
                 catch (InterruptedException e) {}
 

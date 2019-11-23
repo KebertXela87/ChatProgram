@@ -11,6 +11,7 @@ public class RoomPoints
     private static RoomPoints _roomPoints = null;
 
     private HashMap<String, Point> _roomOffsets;
+    private HashMap<String, Point> _hallwayPositions;
 
     private ArrayList<Point> oneOccupant;
     private ArrayList<Point> twoOccupant;
@@ -26,6 +27,7 @@ public class RoomPoints
 
         setupRoomOffsets();
         setupOccupantPositions();
+        setupHallwayPositions();
     }
 
     public static RoomPoints getInstance()
@@ -96,6 +98,33 @@ public class RoomPoints
         sixOccupant.add(new Point(roomCP.getX() + 30, roomCP.getY() + 3));
     }
 
+    private void setupHallwayPositions()
+    {
+        _hallwayPositions = new HashMap<>();
+
+        _hallwayPositions.put("hallway_1", new Point(250 - spriteCP.getX(),100 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_2", new Point(550 - spriteCP.getX(),100 - spriteCP.getY()));
+
+        _hallwayPositions.put("hallway_3", new Point(100 - spriteCP.getX(),250 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_4", new Point(400 - spriteCP.getX(),250 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_5", new Point(700 - spriteCP.getX(),250 - spriteCP.getY()));
+
+        _hallwayPositions.put("hallway_6", new Point(250 - spriteCP.getX(),350 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_7", new Point(550 - spriteCP.getX(),350 - spriteCP.getY()));
+
+        _hallwayPositions.put("hallway_8", new Point(100 - spriteCP.getX(),550 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_9", new Point(400 - spriteCP.getX(),550 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_10", new Point(700 - spriteCP.getX(),550 - spriteCP.getY()));
+
+        _hallwayPositions.put("hallway_11", new Point(250 - spriteCP.getX(),700 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_12", new Point(550 - spriteCP.getX(),700 - spriteCP.getY()));
+    }
+
+    public Point getHallwayPosition(String key)
+    {
+        return _hallwayPositions.get(key);
+    }
+
     private ArrayList<Point> getOccupantPositionList(int number)
     {
         switch(number)
@@ -120,13 +149,19 @@ public class RoomPoints
     {
         ArrayList<Point> updateLocations = new ArrayList<>();
 
-        Point roomOffset = _roomOffsets.get(roomName);
-
-        System.out.println("Occupant Number: " + occupantNum);
-
-        for(Point point : getOccupantPositionList(occupantNum))
+        Point roomPoint;
+        if(roomName.startsWith("hallway_"))
         {
-            updateLocations.add(new Point(point.getX() + roomOffset.getX(), point.getY() + roomOffset.getY()));
+            roomPoint = _hallwayPositions.get(roomName);
+            updateLocations.add(new Point(roomPoint.getX(), roomPoint.getY()));
+        }
+        else // normal room
+        {
+            roomPoint = _roomOffsets.get(roomName);
+            for (Point point : getOccupantPositionList(occupantNum))
+            {
+                updateLocations.add(new Point(point.getX() + roomPoint.getX(), point.getY() + roomPoint.getY()));
+            }
         }
 
         return updateLocations;

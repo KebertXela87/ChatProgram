@@ -59,18 +59,53 @@ public class DialogController
 
     public JPanel getMovePanel()
     {
-        String[] options = getMoveOptions().split(":");
-
+        String[] options;
+        String[] hallwayDir = new String[0];
         JPanel movePanel = new JPanel();
-
         ButtonGroup moveButtonGroup = new ButtonGroup();
-
         resetMoveList();
+
+        // CHECK FOR HALLWAYS
+        if(getMoveOptions().contains("#"))
+        {
+            // SPLIT OUT DIRECTIONS
+            String[] temp = getMoveOptions().split("#");
+
+            options = temp[0].split(":"); // room names
+            hallwayDir = temp[1].split(":"); // hallway directions
+        }
+        else
+        {
+            // NO HALLWAYS
+            options = getMoveOptions().split(":");
+        }
 
         for (String option : options)
         {
-            JRadioButton temp = new JRadioButton(new ImageIcon(_cardFilepath + "rooms/" + option + ".jpg"));
-            temp.setSelectedIcon(new ImageIcon(_cardFilepath + "rooms/selected/" + option + "Selected.jpg"));
+            JRadioButton temp;
+
+            // OPTION IS A HALLWAY, GET DIRECTION
+            if(option.contains("hallway_"))
+            {
+                String hallwayDirection = "";
+                for(String dir : hallwayDir)
+                {
+                    if(dir.startsWith(option))
+                    {
+                        hallwayDirection = dir.split(",")[1];
+                    }
+                }
+
+                temp = new JRadioButton(new ImageIcon(_cardFilepath + "rooms/" + hallwayDirection + ".jpg"));
+                temp.setSelectedIcon(new ImageIcon(_cardFilepath + "rooms/selected/" + hallwayDirection + "Selected.jpg"));
+            }
+            // NOT A HALLWAY
+            else
+            {
+                temp = new JRadioButton(new ImageIcon(_cardFilepath + "rooms/" + option + ".jpg"));
+                temp.setSelectedIcon(new ImageIcon(_cardFilepath + "rooms/selected/" + option + "Selected.jpg"));
+            }
+
             temp.setName(option);
             moveButtonGroup.add(temp);
             moveList.add(temp);
