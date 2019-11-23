@@ -100,6 +100,24 @@ public class ClientApp
             }
         });
 
+        // END TURN BUTTON
+        _endTurnButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                _moveButton.setEnabled(false);
+                _suggestButton.setEnabled(false);
+                _accusationButton.setEnabled(false);
+                _endTurnButton.setEnabled(false);
+
+                _messageField.grabFocus(); // set focus to the chat text field
+
+                controller.writeToServer("endturn:" + controller.getUserName());
+            }
+        });
+
+        // LOGOUT BUTTON
         _logoutButton.addActionListener(new ActionListener()
         {
             @Override

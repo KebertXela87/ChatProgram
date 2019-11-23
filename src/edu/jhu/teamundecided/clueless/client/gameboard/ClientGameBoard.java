@@ -98,8 +98,6 @@ public class ClientGameBoard extends JPanel
                 }
                 catch (InterruptedException e) {}
 
-//                Dimension gameboardSize = getBackgroundSize();
-
                 for (PlayerSprite sprite : sprites)
                 {
                     sprite.moveSprite();
