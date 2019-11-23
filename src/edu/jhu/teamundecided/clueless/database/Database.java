@@ -1,7 +1,5 @@
 package edu.jhu.teamundecided.clueless.database;
 
-import edu.jhu.teamundecided.clueless.server.Server;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,11 +14,7 @@ public class Database
 
     private ArrayList<String> _disabledCharacters;
 
-    private Server _gameServer;
-
     private static Database _database = null;
-
-    private boolean _running = true;
 
     private ReentrantLock lock = new ReentrantLock();
 
@@ -44,20 +38,6 @@ public class Database
 
         return _database;
     }
-
-    public boolean getRunning()
-    {
-        return _running;
-    }
-
-    public void setRunning(boolean value)
-    {
-        _running = value;
-    }
-
-    public Server getGameServer() { return _gameServer; }
-
-    public void setGameServer(Server server) { _gameServer = server; }
 
     private void  setupCharacterNames()
     {

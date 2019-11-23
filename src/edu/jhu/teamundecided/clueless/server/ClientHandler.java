@@ -1,5 +1,6 @@
 package edu.jhu.teamundecided.clueless.server;
 
+import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.io.*;
@@ -11,9 +12,11 @@ public class ClientHandler extends Thread
     private BufferedWriter _writer; // Output to Client App
 
     private Socket _clientSocket;
-    private Server _server;
 
     private ServerApp _serverApp;
+
+    private Database database = Database.getInstance();
+    private GameController gameController;
 
     // User Variables
     private Player _player;
@@ -28,7 +31,8 @@ public class ClientHandler extends Thread
             _writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             _clientSocket = socket;
-            _server = server;
+            gameController = server.getGameController(); // Get the Server GameController
+
             _serverApp = server.getServerApp();
 
             _player = new Player();
@@ -63,6 +67,8 @@ public class ClientHandler extends Thread
         }
     }
 
+    public Database getClientDatabase() { return database; }
+
     public void handleMessage(String message)
     {
         System.out.println("Message: " + message);
@@ -71,39 +77,68 @@ public class ClientHandler extends Thread
         switch(tokens[0])
         {
             case "chat":
-                broadcast(tokens[1]);
+                broadcast(tokens[1]); // ClientHandler Method
                 break;
             case "user":
-                setUserName(tokens[1]);
-                break;
-            case "getmoves":
-                getPossibleMoves(tokens[1]);
-                break;
-            case "getSuggestRoom":
-                getSuggestionRoom(tokens[1]);
-                break;
-            case "getPlayerHand":
-                getPlayerHand(tokens[1]);
-                break;
-            case "character":
-                setPlayerCharacter(tokens[1]);
+                setUserName(tokens[1]); // ClientHandler Method
                 break;
             case "getDisabledCharacters":
-                getDisableCharacterList();
+                getDisableCharacterList(); // ClientHandler Method
+                break;
+            case "getmoves":
+                getPossibleMoves(tokens[1]); // ClientHandler Method
+                break;
+            case "getSuggestRoom":
+                getSuggestionRoom(tokens[1]); // ClientHandler Method
+                break;
+            case "getPlayerHand":
+                getPlayerHand(tokens[1]); // ClientHandler Method
+                break;
+            case "character":
+                setPlayerCharacter(tokens[1]); // ClientHandler Method
                 break;
             case "logoff":
-                handleLoggoff(tokens[1]);
+                handleLoggoff(tokens[1]); // ClientHandler Method
                 break;
         }
     }
 
+    public void broadcast(String message)
+    {
+        for (ClientHandler client : gameController.getGameServer().getCients())
+        {
+            client.writeToClient(message);
+        }
+    }
+
+    public void setUserName(String name)
+    {
+        _player.setUserName(name);
+    }
+
+    private void getDisableCharacterList()
+    {
+        broadcast("disableCharacter" + gameController.getSelectedCharacters());
+    }
+
     private void getPlayerHand(String token)
     {
-        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
+        //TODO UNCOMMENT THIS CODE ONCE GAME START IS IMPLEMENTED
 //        writeToClient("playerHandDialog" + _player.getPlayerHand().toString());
 
         // DEMO CODE
         writeToClient("playerHandDialog:hall:mustard:scarlett:rope:knife:ballroom");
+    }
+
+    /**
+     * Sets the Client's Player Character and their Starting Location
+     * @param name - the character name to set this client player to
+     */
+    public void setPlayerCharacter(String name)
+    {
+        broadcast("disableCharacter:" + name);
+        _player.setCharacterName(name);
+        _player.setLocation(gameController.getGameBoard().findRoom(name + "startloc"));
     }
 
     private void getSuggestionRoom(String token)
@@ -113,29 +148,6 @@ public class ClientHandler extends Thread
 
         // DEMO CODE
         writeToClient("suggestDialog:hall");
-    }
-
-    private void getDisableCharacterList()
-    {
-        StringBuilder list = new StringBuilder("disableCharacter");
-        for (ClientHandler client : _server.getCients())
-        {
-            list.append(":").append(client.getPlayer().getCharacterName());
-        }
-        broadcast(list.toString());
-    }
-
-    public void broadcast(String message)
-    {
-        for (ClientHandler client : _server.getCients())
-        {
-            client.writeToClient(message);
-        }
-    }
-
-    public void setUserName(String name)
-    {
-        _player.setUserName(name);
     }
 
     private void getPossibleMoves(String name)
@@ -152,19 +164,9 @@ public class ClientHandler extends Thread
         writeToClient("moveDialog:study:study:study");
     }
 
-    private void setPlayerCharacter(String name)
-    {
-        System.out.println("setting player " + _player.getUserName() + " to " + name);
-        _player.setCharacterName(name);
-        for (ClientHandler client : _server.getCients())
-        {
-            client.writeToClient("disableCharacter:" + name);
-        }
-    }
-
     public void handleLoggoff(String name)
     {
-        _server.removeHandler(this);
+        gameController.getGameServer().removeHandler(this);
         try
         {
             _handlerRunning = false;

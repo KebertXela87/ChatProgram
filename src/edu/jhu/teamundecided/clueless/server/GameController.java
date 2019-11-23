@@ -1,6 +1,5 @@
 package edu.jhu.teamundecided.clueless.server;
 
-import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.deck.DeckController;
 import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
 
@@ -8,42 +7,39 @@ public class GameController
 {
     private static GameController _gameController = null;
 
-    private Database db = Database.getInstance();
-
+    private Server _server;
     private GameBoard _gameboard;
     private DeckController _deckController;
     private final int _turn;
 
-    public GameController()
+    public GameController(Server server)
     {
+        _server = server;
         _gameboard = new GameBoard();
         _deckController = new DeckController();
         _turn = 0;
     }
 
-    public static GameController getInstance()
+    public static GameController getInstance(Server server)
     {
         if (_gameController == null)
         {
-            _gameController = new GameController();
+            _gameController = new GameController(server);
         }
 
         return _gameController;
     }
 
-    public void broadcast(String message)
-    {
-        for (ClientHandler client : db.getGameServer().getCients())
-        {
-            client.writeToClient(message);
-        }
-    }
+    public Server getGameServer() { return _server; }
+    public GameBoard getGameBoard() { return _gameboard; }
 
-    public void placePlayers()
+    public String getSelectedCharacters()
     {
-        for (ClientHandler client : db.getGameServer().getCients())
+        StringBuilder list = new StringBuilder();
+        for(ClientHandler client : _server.getCients())
         {
-            //TODO
+            list.append(":").append(client.getPlayer().getCharacterName());
         }
+        return list.toString();
     }
 }

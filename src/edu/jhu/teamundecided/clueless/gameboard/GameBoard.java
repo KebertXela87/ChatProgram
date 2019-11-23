@@ -36,7 +36,6 @@ public class GameBoard
 
     public ArrayList<Room> rooms;
 
-
     public GameBoard()
     {
         // Starting Rooms
@@ -104,9 +103,13 @@ public class GameBoard
         hallway_11.setAdjacentRooms(new ArrayList<>(Arrays.asList(conservatory, ballroom)));
         hallway_12.setAdjacentRooms(new ArrayList<>(Arrays.asList(ballroom, kitchen)));
 
-        rooms = new ArrayList<>(Arrays.asList(study, hallway_1, hall, hallway_2, lounge, hallway_3
-                , blank, hallway_4, blank, hallway_5, library, hallway_6, billiardroom, hallway_7, diningroom, hallway_8, blank, hallway_9, blank, hallway_10, conservatory, hallway_11, ballroom, hallway_12, kitchen));
+//        rooms = new ArrayList<>(Arrays.asList(study, hallway_1, hall, hallway_2, lounge, hallway_3
+//                , blank, hallway_4, blank, hallway_5, library, hallway_6, billiardroom, hallway_7, diningroom, hallway_8, blank, hallway_9, blank, hallway_10, conservatory, hallway_11, ballroom, hallway_12, kitchen));
 
+        rooms = new ArrayList<>(Arrays.asList(Scarlett, Mustard, Green, Peacock, White, Plum,
+                study, hall, lounge, library, billiardroom, diningroom, conservatory, ballroom,
+                kitchen, hallway_1, hallway_2, hallway_3, hallway_4, hallway_5, hallway_6, hallway_7,
+                hallway_8, hallway_9, hallway_10, hallway_11, hallway_12));
     }
 
 
@@ -298,7 +301,7 @@ public class GameBoard
 //    }
 
 
-    private Room findRoom(String roomName)
+    public Room findRoom(String roomName)
     {
 
         for (Room room : rooms)
@@ -312,6 +315,4 @@ public class GameBoard
         System.out.println("Did not find room : " + roomName);
         return null;
     }
-
-
 }

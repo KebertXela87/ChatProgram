@@ -21,6 +21,10 @@ public class Server extends Thread
 
     private int _serverPort;
 
+    private boolean _running = true;
+
+    private GameController gc = GameController.getInstance(this);
+
     public ServerApp getServerApp()
     {
         return _serverApp;
@@ -50,7 +54,7 @@ public class Server extends Thread
                     // Close connection to server
                     if(_serverSocket != null)
                     {
-                        Database.getInstance().setRunning(false);
+                        _running = false;
                         for (ClientHandler handler : _clients)
                         {
                             System.out.println("Closing socket for " + handler.getPlayer().getUserName());
@@ -78,7 +82,7 @@ public class Server extends Thread
         {
             _serverSocket = new ServerSocket(8818);
 
-            while (Database.getInstance().getRunning())
+            while (_running)
             {
                 if(_numConnections < 6)
                 {
@@ -93,7 +97,6 @@ public class Server extends Thread
                     }
                     catch (SocketException e)
                     {
-                        System.out.println("Running?: " + Database.getInstance().getRunning());
                         System.out.println("Server is closed. Accepting no more connections.");
                     }
                 }
@@ -122,4 +125,6 @@ public class Server extends Thread
     {
         return _clients;
     }
+
+    public GameController getGameController() { return gc; }
 }

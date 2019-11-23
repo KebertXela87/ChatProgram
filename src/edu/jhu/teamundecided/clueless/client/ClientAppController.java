@@ -58,7 +58,6 @@ public class ClientAppController
         // Start Server
         Server server = new Server(8818);
         server.start();
-        Database.getInstance().setGameServer(server);
     }
 
     public void startClient()
@@ -122,7 +121,6 @@ public class ClientAppController
         switch(tokens[0])
         {
             case "serverclose":
-                Database.getInstance().setRunning(false);
                 _reader.close();
                 _writer.close();
                 _socket.close();
