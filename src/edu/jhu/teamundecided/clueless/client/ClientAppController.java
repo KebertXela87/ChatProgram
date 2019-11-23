@@ -138,6 +138,9 @@ public class ClientAppController
             case "playerHandDialog":
                 DialogController.getInstance().createPlayerHandDialog(this, tokens[1]);
                 break;
+            case "moveSprites":
+                _clientApp.getClientGameBoard().handleSpriteMovement(tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }

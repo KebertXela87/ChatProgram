@@ -1,7 +1,6 @@
 package edu.jhu.teamundecided.clueless.client.gameboard;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +42,11 @@ public class PlayerSprite
         dy = 1;
     }
 
+    public String getName()
+    {
+        return _name;
+    }
+
     public void paintSprite( Graphics g )
     {
         if (image != null)
@@ -51,10 +55,27 @@ public class PlayerSprite
         }
     }
 
-    public void move()
+    public void moveSprite()
     {
-        x += dx;
-        y += dy;
+        if (x != _destX || y != _destY)
+        {
+            if(x < _destX)
+            {
+                x += dx;
+            }
+            if(x > _destX)
+            {
+                x -= dx;
+            }
+            if(y < _destY)
+            {
+                y += dy;
+            }
+            if(y > _destY)
+            {
+                y -= dy;
+            }
+        }
     }
 
     public int getX()

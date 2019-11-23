@@ -2,6 +2,8 @@ package edu.jhu.teamundecided.clueless.server;
 
 import edu.jhu.teamundecided.clueless.deck.DeckController;
 import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
+import edu.jhu.teamundecided.clueless.gameboard.Room;
+import edu.jhu.teamundecided.clueless.player.Player;
 
 public class GameController
 {
@@ -41,5 +43,33 @@ public class GameController
             list.append(":").append(client.getPlayer().getCharacterName());
         }
         return list.toString();
+    }
+
+    public String updateLocations(Player player, String newRoomName)
+    {
+        System.out.println("Creating moveSprites message...");
+        StringBuilder moveSprites = new StringBuilder("moveSprites:");
+
+        Room oldRoom = player.getLocation();
+        Room newRoom = _gameboard.findRoom(newRoomName);
+
+        // Update Player Object Location
+        _gameboard.movePlayer(player, newRoom); // GameBoard Method
+
+        moveSprites.append(oldRoom.getRoomName());
+
+        for(Player occupant : oldRoom.getOccupants())
+        {
+            moveSprites.append(":").append(occupant.getCharacterName());
+        }
+
+        moveSprites.append("#").append(newRoom.getRoomName());
+
+        for(Player occupant : newRoom.getOccupants())
+        {
+            moveSprites.append(":").append(occupant.getCharacterName());
+        }
+
+        return moveSprites.toString();
     }
 }

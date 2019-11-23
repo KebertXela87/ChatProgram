@@ -1,6 +1,8 @@
 package edu.jhu.teamundecided.clueless.client.gameboard;
 
 import edu.jhu.teamundecided.clueless.database.Database;
+import edu.jhu.teamundecided.clueless.database.Point;
+import edu.jhu.teamundecided.clueless.database.RoomPoints;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -70,7 +72,7 @@ public class ClientGameBoard extends JPanel
     public void addSprite(String name)
     {
         PlayerSprite sprite = new PlayerSprite(name);
-        Database.Point loc = Database.getInstance().getStartingLocation(name);
+        Point loc = Database.getInstance().getStartingLocation(name);
         sprite.setX(loc.getX());
         sprite.setY(loc.getY());
         sprite.setInitDest();
@@ -100,13 +102,48 @@ public class ClientGameBoard extends JPanel
 
                 for (PlayerSprite sprite : sprites)
                 {
-                    //TODO update this demo code
-                    if (sprite.getX() != sprite.getDestX())
-                    {
-                        sprite.move();
-                    }
+                    sprite.moveSprite();
                 }
                 repaint();
+            }
+        }
+    }
+
+    public void handleSpriteMovement(String message)
+    {
+        String[] RoomOccupantLists = message.split("#");
+
+        for(String occupantList : RoomOccupantLists)
+        {
+            processOccupants(occupantList);
+        }
+    }
+
+    public void processOccupants(String occupantList)
+    {
+        String[] list = occupantList.split(":");
+
+        String roomName = list[0];
+
+        int occupantNum = list.length - 1;
+
+        if (occupantNum > 0)
+        {
+            ArrayList<Point> locPoints = RoomPoints.getInstance().getLocationPoints(roomName, occupantNum);
+
+            int i = 1;
+            for (Point point : locPoints)
+            {
+                for (PlayerSprite sprite : sprites)
+                {
+                    if (sprite.getName().equals(list[i]))
+                    {
+                        sprite.setDestX(point.getX());
+                        sprite.setDestY(point.getY());
+                    }
+                }
+
+                i++;
             }
         }
     }

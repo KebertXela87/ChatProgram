@@ -88,6 +88,9 @@ public class ClientHandler extends Thread
             case "getmoves":
                 getPossibleMoves(tokens[1]); // ClientHandler Method
                 break;
+            case "move":
+                updateLocations(tokens[1]);
+                break;
             case "getSuggestRoom":
                 getSuggestionRoom(tokens[1]); // ClientHandler Method
                 break;
@@ -162,6 +165,12 @@ public class ClientHandler extends Thread
 
         // DEMO CODE
         writeToClient("moveDialog:study:study:study");
+    }
+
+    public void updateLocations(String roomname)
+    {
+        System.out.println("Updating Locations...");
+        broadcast(gameController.updateLocations(_player, roomname));
     }
 
     public void handleLoggoff(String name)

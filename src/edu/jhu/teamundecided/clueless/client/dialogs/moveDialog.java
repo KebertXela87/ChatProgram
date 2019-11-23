@@ -4,7 +4,6 @@ import edu.jhu.teamundecided.clueless.client.ClientAppController;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class moveDialog extends JDialog
 {
@@ -78,7 +77,7 @@ public class moveDialog extends JDialog
         StringBuilder move = new StringBuilder("move:");
         move.append(_moveSelection);
 
-//        cac.writeToServer(move.toString());
+        cac.writeToServer(move.toString());
         System.out.println(move.toString());
 
         cac.getClientApp().getMoveButton().setEnabled(false);

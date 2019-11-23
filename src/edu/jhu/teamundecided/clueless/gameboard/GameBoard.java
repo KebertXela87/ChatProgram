@@ -1,5 +1,7 @@
 package edu.jhu.teamundecided.clueless.gameboard;
 
+import edu.jhu.teamundecided.clueless.player.Player;
+
 import java.util.*;
 
 public class GameBoard
@@ -280,25 +282,22 @@ public class GameBoard
 //    }
 
 
-//    public boolean movePlayer(Player player, String roomName)
-//    {
-//
-//        // remove player from room only if player already exists in a room
-//        if (player.getLocation() != null)
-//        {
-//            player.getLocation().removeOccupant(player);
-//        }
-//
-//        Room room = findRoom(roomName);
-//
-//        room.addOccupant(player);
-//
-//        player.setLocation(room);
-//
-//        System.out.println(player.getCharacterName() + " moved to " + room.getRoomName());
-//
-//        return true;
-//    }
+    public boolean movePlayer(Player player, Room room)
+    {
+        // remove player from room only if player already exists in a room
+        if (player.getLocation() != null)
+        {
+            player.getLocation().removeOccupant(player);
+        }
+
+        room.addOccupant(player);
+
+        player.setLocation(room);
+
+        System.out.println(player.getCharacterName() + " moved to " + room.getRoomName());
+
+        return true;
+    }
 
 
     public Room findRoom(String roomName)

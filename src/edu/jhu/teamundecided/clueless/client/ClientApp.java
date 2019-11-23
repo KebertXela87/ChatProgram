@@ -1,7 +1,6 @@
 package edu.jhu.teamundecided.clueless.client;
 
 import edu.jhu.teamundecided.clueless.client.dialogs.DialogController;
-import edu.jhu.teamundecided.clueless.client.dialogs.moveDialog;
 import edu.jhu.teamundecided.clueless.client.gameboard.ClientGameBoard;
 
 import javax.swing.*;
@@ -141,6 +140,8 @@ public class ClientApp
     {
         return _endTurnButton;
     }
+
+    public ClientGameBoard getClientGameBoard() { return (ClientGameBoard) _gameBoard; }
 
     private void createUIComponents()
     {
