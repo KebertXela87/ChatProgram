@@ -117,7 +117,6 @@ public class ClientAppController
 
     public void handleMessage(String message) throws IOException
     {
-        System.out.println("Client Message: " + message);
         String[] tokens = message.split(":", 2);
 
         switch(tokens[0])

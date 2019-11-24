@@ -55,7 +55,7 @@ public class ClientHandler extends Thread
 
                 if (received != null)
                 {
-                    _serverApp.writeToWindow(received);
+                    _serverApp.writeToWindow("Client Message [" + _player.getUserName() + "]: " + received);
 
                     handleMessage(received);
                 }
@@ -71,7 +71,6 @@ public class ClientHandler extends Thread
 
     public void handleMessage(String message)
     {
-        System.out.println("Message: " + message);
         String[] tokens = message.split(":", 2);
 
         switch(tokens[0])
@@ -209,6 +208,7 @@ public class ClientHandler extends Thread
             _writer.write(message);
             _writer.newLine();
             _writer.flush();
+            _serverApp.writeToWindow("Server Message [" + _player.getUserName() + "]: " + message);
         }
         catch (IOException e)
         {
