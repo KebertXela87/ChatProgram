@@ -22,6 +22,7 @@ public class ClientAppController
     private JFrame _frame;
 
     private String _userName;
+    private boolean _isHost = false;
 
     private boolean _clientRunning = true;
 
@@ -56,6 +57,7 @@ public class ClientAppController
     public void startServer()
     {
         // Start Server
+        this._isHost =  true;
         Server server = new Server(8818);
         server.start();
     }
@@ -124,7 +126,7 @@ public class ClientAppController
                 _reader.close();
                 _writer.close();
                 _socket.close();
-                getClientApp().writeToScreen("Server Closed!");
+                getClientApp().writeToScreen("The Server has closed! The host has logged off!");
                 break;
             case "disableCharacter":
                 addToClientDisabledCharacterList(tokens[1]);
@@ -165,9 +167,16 @@ public class ClientAppController
         try
         {
             // Close connection to server
-            if (_socket != null)
+            if (!_socket.isClosed())
             {
-                writeToServer("logoff:" + _userName);
+                if(_isHost)
+                {
+                    writeToServer("shutdownServer");
+                }
+                else
+                {
+                    writeToServer("logoff:" + _userName);
+                }
                 _clientRunning = false;
                 _socket.close();
             }

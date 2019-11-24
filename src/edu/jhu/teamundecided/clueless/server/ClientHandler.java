@@ -103,6 +103,9 @@ public class ClientHandler extends Thread
             case "logoff":
                 handleLoggoff(tokens[1]); // ClientHandler Method
                 break;
+            case "shutdownServer":
+                gameController.getGameServer().shutdown();
+                break;
         }
     }
 
@@ -176,7 +179,6 @@ public class ClientHandler extends Thread
 
     public void updateLocations(String roomname)
     {
-        System.out.println("Updating Locations...");
         broadcast(gameController.updateLocations(_player, roomname));
     }
 

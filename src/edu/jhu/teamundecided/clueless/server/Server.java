@@ -49,31 +49,37 @@ public class Server extends Thread
             @Override
             public void windowClosing(WindowEvent e)
             {
-                try
-                {
-                    // Close connection to server
-                    if(_serverSocket != null)
-                    {
-                        _running = false;
-                        for (ClientHandler handler : _clients)
-                        {
-                            System.out.println("Closing socket for " + handler.getPlayer().getUserName());
-                            handler.writeToClient("serverclose");
-                        }
-                        _serverSocket.close();
-                    }
-                }
-                catch (IOException ex)
-                {
-                    ex.printStackTrace();
-                }
-
-                // Close window
-                System.exit(0);
+                shutdown();
             }
         });
 
         _serverApp.getServerFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void shutdown()
+    {
+        try
+        {
+            System.out.println("Running the server close listener!");
+            // Close connection to server
+            if(_serverSocket != null)
+            {
+                _running = false;
+                for (ClientHandler handler : _clients)
+                {
+                    System.out.println("Closing socket for " + handler.getPlayer().getUserName());
+                    handler.writeToClient("serverclose");
+                }
+                _serverSocket.close();
+            }
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
+        // Close window
+        System.exit(0);
     }
 
     public void run()
