@@ -1,11 +1,9 @@
 package edu.jhu.teamundecided.clueless.client.dialogs;
 
-import edu.jhu.teamundecided.clueless.client.ClientApp;
 import edu.jhu.teamundecided.clueless.client.ClientAppController;
 import edu.jhu.teamundecided.clueless.database.Database;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class DialogController
@@ -31,6 +29,8 @@ public class DialogController
 
     private playerHandDialog _playerDialog = null;
     private String _playerHand;
+
+    private notebookDialog _notebookDialog = null;
 
     public DialogController()
     {}
@@ -223,5 +223,21 @@ public class DialogController
     public void setPlayerDialogNull()
     {
         _playerDialog = null;
+    }
+
+    /// NOTEBOOK PANEL
+    public void createNotebookDialog(ClientAppController controller)
+    {
+        if(_notebookDialog == null)
+        {
+            _notebookDialog =  new notebookDialog();
+        }
+
+        _notebookDialog.setModal(false);
+        _notebookDialog.setTitle("Notebook");
+        _notebookDialog.setResizable(false);
+        _notebookDialog.pack();
+        _notebookDialog.setLocationRelativeTo(controller.getFrame());
+        _notebookDialog.setVisible(true);
     }
 }

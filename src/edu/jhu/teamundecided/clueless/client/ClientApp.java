@@ -96,7 +96,7 @@ public class ClientApp
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
+                DialogController.getInstance().createNotebookDialog(controller);
             }
         });
 
