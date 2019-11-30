@@ -1,8 +1,11 @@
 package edu.jhu.teamundecided.clueless.server;
 
+import edu.jhu.teamundecided.clueless.deck.Card;
 import edu.jhu.teamundecided.clueless.deck.DeckController;
+import edu.jhu.teamundecided.clueless.deck.Suggestion;
 import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
 import edu.jhu.teamundecided.clueless.gameboard.Room;
+import edu.jhu.teamundecided.clueless.gameboard.Weapon;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.util.ArrayList;
@@ -90,14 +93,34 @@ public class GameController
 
     public Player getNextTurn(){
         _players = getPlayers();
+        int playerCount = _players.size();
         _turn++;
-        _turn %= 6;
+        _turn %= playerCount;
         return _players.get(_turn);
     }
 
     public void handleEndTurn(){
         Player next = getNextTurn();
         //next.executeTurn();
+    }
+
+    public void handleAccusationCommand(Suggestion accusation){
+        for (ClientHandler handler:_server.getCients()) {
+            handler.writeToClient(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
+        }
+
+        if(_deckController.checkAccusation(accusation)){
+            _gameOver = true;
+            for (ClientHandler handler:_server.getCients()) {
+                handler.writeToClient(_players.get(_turn).getUserName() + "'s accusation was correct!");
+                handler.writeToClient("The game is over!");
+            }
+        }
+        else{
+            for (ClientHandler handler:_server.getCients()) {
+                handler.writeToClient(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
+            }
+        }
     }
 
     public boolean isGameOver(){
