@@ -5,6 +5,8 @@ import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
 import edu.jhu.teamundecided.clueless.gameboard.Room;
 import edu.jhu.teamundecided.clueless.player.Player;
 
+import java.util.ArrayList;
+
 public class GameController
 {
     private static GameController _gameController = null;
@@ -12,7 +14,9 @@ public class GameController
     private Server _server;
     private GameBoard _gameboard;
     private DeckController _deckController;
-    private final int _turn;
+    private int _turn;
+    private boolean _gameOver;
+    private ArrayList<Player> _players;
 
     public GameController(Server server)
     {
@@ -20,6 +24,8 @@ public class GameController
         _gameboard = new GameBoard();
         _deckController = new DeckController();
         _turn = 0;
+        _gameOver = false;
+        _players = getPlayers();
     }
 
     public static GameController getInstance(Server server)
@@ -71,5 +77,30 @@ public class GameController
         }
 
         return moveSprites.toString();
+    }
+
+    public ArrayList<Player> getPlayers(){
+        ArrayList<Player> players = new ArrayList<Player>();
+        ArrayList<ClientHandler> handlers = _server.getCients();
+        for (ClientHandler handler : handlers) {
+            players.add(handler.getPlayer());
+        }
+        return players;
+    }
+
+    public Player getNextTurn(){
+        _players = getPlayers();
+        _turn++;
+        _turn %= 6;
+        return _players.get(_turn);
+    }
+
+    public void handleEndTurn(){
+        Player next = getNextTurn();
+        //next.executeTurn();
+    }
+
+    public boolean isGameOver(){
+        return _gameOver;
     }
 }
