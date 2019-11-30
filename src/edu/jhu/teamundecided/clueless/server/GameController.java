@@ -101,7 +101,13 @@ public class GameController
 
     public void handleEndTurn(){
         Player next = getNextTurn();
-        //next.executeTurn();
+        //TODO next.executeTurn();
+    }
+
+    public void handleMoveRequest(Player player, String room){
+        Room destination = _gameboard.findRoom(room);
+        _gameboard.movePlayer(player, destination);
+        //TODO broadcast move to all players
     }
 
     public void handleAccusationCommand(Suggestion accusation){
