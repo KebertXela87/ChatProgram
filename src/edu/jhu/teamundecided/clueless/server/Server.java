@@ -133,4 +133,10 @@ public class Server extends Thread
     }
 
     public GameController getGameController() { return gc; }
+
+    public void broadcastToAll(String msg){
+        for (ClientHandler handler : _clients) {
+            handler.writeToClient(msg);
+        }
+    }
 }

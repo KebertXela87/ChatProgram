@@ -6,6 +6,7 @@ import edu.jhu.teamundecided.clueless.deck.Suggestion;
 import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
 import edu.jhu.teamundecided.clueless.gameboard.Room;
 import edu.jhu.teamundecided.clueless.gameboard.Weapon;
+import edu.jhu.teamundecided.clueless.player.Hand;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class GameController
     private GameBoard _gameboard;
     private DeckController _deckController;
     private int _turn;
+    private int _mark;
     private boolean _gameOver;
     private ArrayList<Player> _players;
 
@@ -27,6 +29,7 @@ public class GameController
         _gameboard = new GameBoard();
         _deckController = new DeckController();
         _turn = 0;
+        _mark = 1;
         _gameOver = false;
         _players = getPlayers();
     }
@@ -104,32 +107,68 @@ public class GameController
         //TODO next.executeTurn();
     }
 
-    public void handleMoveRequest(Player player, String room){
-        Room destination = _gameboard.findRoom(room);
-        _gameboard.movePlayer(player, destination);
-        //TODO broadcast move to all players
+    public void handleSuggestionCommand(Suggestion sug){
+        _server.broadcastToAll(_players.get(_turn).getUserName() + " suggested " + sug.toString());
+
+        ArrayList<Card> suggestedCards = sug.getSuggestedCards();
+        _mark = _turn + 1; //start checking with next player
+        ArrayList<Card> possibleCards = new ArrayList<Card>();
+        while (_mark != _turn){
+            Player possible = _players.get(_mark);
+            ArrayList<Card> hand = possible.getPlayerHand().getCards();
+            for (Card card : suggestedCards) {
+                for (Card check : hand) {
+                    if(check.getCardName().equalsIgnoreCase(card.getCardName())){
+                        possibleCards.add(check);
+                    }
+                }
+            }
+
+            if(possibleCards.isEmpty()){
+                _mark ++;
+                _mark %= _players.size();
+            }
+            else break;
+        }
+
+        if(!possibleCards.isEmpty()){
+            _server.broadcastToAll(_players.get(_mark).getUserName() + " can disprove the suggestion.");
+            //TODO _players.get(mark). disproveSuggestion(possibleCards)
+        }
+        else{
+            _server.broadcastToAll("Nobody disproved the suggestion.");
+        }
+    }
+
+    public void handleDisproven(Card card){
+        _server.broadcastToAll(_players.get(_mark).getUserName() + " has shown a card to " + _players.get(_turn).getUserName());
+        ClientHandler currentHandler = getClientHandler(_players.get(_turn));
+        currentHandler.writeToClient(_players.get(_mark).getUserName() + " has shown you the " + card.getCardName());
     }
 
     public void handleAccusationCommand(Suggestion accusation){
-        for (ClientHandler handler:_server.getCients()) {
-            handler.writeToClient(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
-        }
+        _server.broadcastToAll(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
 
         if(_deckController.checkAccusation(accusation)){
             _gameOver = true;
-            for (ClientHandler handler:_server.getCients()) {
-                handler.writeToClient(_players.get(_turn).getUserName() + "'s accusation was correct!");
-                handler.writeToClient("The game is over!");
-            }
+            _server.broadcastToAll(_players.get(_turn).getUserName() + "'s accusation was correct!");
+            _server.broadcastToAll("The game is over!");
         }
         else{
-            for (ClientHandler handler:_server.getCients()) {
-                handler.writeToClient(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
-            }
+            _server.broadcastToAll(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
         }
     }
 
     public boolean isGameOver(){
         return _gameOver;
+    }
+
+    private ClientHandler getClientHandler(Player player){
+        for (ClientHandler handler : _server.getCients()) {
+            if(handler.getPlayer().getCharacterName().equalsIgnoreCase(player.getCharacterName())){
+                return handler;
+            }
+        }
+        return null;
     }
 }
