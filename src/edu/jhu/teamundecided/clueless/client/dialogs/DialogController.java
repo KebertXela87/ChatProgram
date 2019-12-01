@@ -137,7 +137,7 @@ public class DialogController
     {
         _suggestionRoom = room;
         suggestDialog dialog = new suggestDialog(controller);
-        dialog.setTitle("Make an Suggestion!");
+        dialog.setTitle("Make a Suggestion!");
         dialog.setResizable(false);
         dialog.pack();
         dialog.setLocationRelativeTo(controller.getFrame());

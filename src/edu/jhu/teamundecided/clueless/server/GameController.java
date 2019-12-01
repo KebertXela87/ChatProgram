@@ -5,170 +5,269 @@ import edu.jhu.teamundecided.clueless.deck.DeckController;
 import edu.jhu.teamundecided.clueless.deck.Suggestion;
 import edu.jhu.teamundecided.clueless.gameboard.GameBoard;
 import edu.jhu.teamundecided.clueless.gameboard.Room;
-import edu.jhu.teamundecided.clueless.gameboard.Weapon;
-import edu.jhu.teamundecided.clueless.player.Hand;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.util.ArrayList;
 
 public class GameController
 {
-    private static GameController _gameController = null;
 
-    private Server _server;
-    private GameBoard _gameboard;
-    private DeckController _deckController;
-    private int _turn;
-    private int _mark;
-    private boolean _gameOver;
-    private ArrayList<Player> _players;
+   private static GameController _gameController = null;
 
-    public GameController(Server server)
-    {
-        _server = server;
-        _gameboard = new GameBoard();
-        _deckController = new DeckController();
-        _turn = 0;
-        _mark = 1;
-        _gameOver = false;
-        _players = getPlayers();
-    }
+   private Server _server;
+   private GameBoard _gameboard;
+   private DeckController _deckController;
+   private int _turn;
+   private boolean _gameOver;
+   private ArrayList<Player> _players;
 
-    public static GameController getInstance(Server server)
-    {
-        if (_gameController == null)
-        {
-            _gameController = new GameController(server);
-        }
 
-        return _gameController;
-    }
+   public GameController(Server server)
+   {
 
-    public Server getGameServer() { return _server; }
-    public GameBoard getGameBoard() { return _gameboard; }
+      _server = server;
+      _gameboard = new GameBoard();
+      _deckController = new DeckController();
+      _turn = -1;
+      _gameOver = false;
+      _players = new ArrayList<>();
+   }
 
-    public String getSelectedCharacters()
-    {
-        StringBuilder list = new StringBuilder();
-        for(ClientHandler client : _server.getCients())
-        {
-            list.append(":").append(client.getPlayer().getCharacterName());
-        }
-        return list.toString();
-    }
 
-    public String updateLocations(Player player, String newRoomName)
-    {
-        System.out.println("Creating moveSprites message...");
-        StringBuilder moveSprites = new StringBuilder("moveSprites:");
+   public static GameController getInstance(Server server)
+   {
 
-        Room oldRoom = player.getLocation();
-        Room newRoom = _gameboard.findRoom(newRoomName);
+      if (_gameController == null)
+      {
+         _gameController = new GameController(server);
+      }
 
-        // Update Player Object Location
-        _gameboard.movePlayer(player, newRoom); // GameBoard Method
+      return _gameController;
+   }
 
-        moveSprites.append(oldRoom.getRoomName());
 
-        for(Player occupant : oldRoom.getOccupants())
-        {
-            moveSprites.append(":").append(occupant.getCharacterName());
-        }
+   public Server getGameServer()
+   {
 
-        moveSprites.append("#").append(newRoom.getRoomName());
+      return _server;
+   }
 
-        for(Player occupant : newRoom.getOccupants())
-        {
-            moveSprites.append(":").append(occupant.getCharacterName());
-        }
 
-        return moveSprites.toString();
-    }
+   public GameBoard getGameBoard()
+   {
 
-    public ArrayList<Player> getPlayers(){
-        ArrayList<Player> players = new ArrayList<Player>();
-        ArrayList<ClientHandler> handlers = _server.getCients();
-        for (ClientHandler handler : handlers) {
-            players.add(handler.getPlayer());
-        }
-        return players;
-    }
+      return _gameboard;
+   }
 
-    public Player getNextTurn(){
-        _players = getPlayers();
-        int playerCount = _players.size();
-        _turn++;
-        _turn %= playerCount;
-        return _players.get(_turn);
-    }
 
-    public void handleEndTurn(){
-        Player next = getNextTurn();
-        //TODO next.executeTurn();
-    }
+   public String getSelectedCharacters()
+   {
 
-    public void handleSuggestionCommand(Suggestion sug){
-        _server.broadcastToAll(_players.get(_turn).getUserName() + " suggested " + sug.toString());
+      StringBuilder list = new StringBuilder();
 
-        ArrayList<Card> suggestedCards = sug.getSuggestedCards();
-        _mark = _turn + 1; //start checking with next player
-        ArrayList<Card> possibleCards = new ArrayList<Card>();
-        while (_mark != _turn){
-            Player possible = _players.get(_mark);
-            ArrayList<Card> hand = possible.getPlayerHand().getCards();
-            for (Card card : suggestedCards) {
-                for (Card check : hand) {
-                    if(check.getCardName().equalsIgnoreCase(card.getCardName())){
-                        possibleCards.add(check);
-                    }
-                }
+      for (Player player : _players)
+      {
+         list.append(":").append(player.getCharacterName());
+      }
+
+/*      for (ClientHandler client : _server.getCients())
+      {
+         list.append(":").append(client.getPlayer().getCharacterName());
+      }*/
+
+      return list.toString();
+
+
+
+   }
+
+
+   public String updateLocations(Player player, String newRoomName)
+   {
+
+      System.out.println("Creating moveSprites message...");
+      StringBuilder moveSpritesMsg = new StringBuilder("moveSprites:");
+
+      Room oldRoom = player.getLocation();
+      Room newRoom = _gameboard.findRoom(newRoomName);
+
+      // Update Player Object Location
+      _gameboard.movePlayer(player, newRoom); // GameBoard Method
+
+      moveSpritesMsg.append(oldRoom.getRoomName());
+
+      for (Player occupant : oldRoom.getOccupants())
+      {
+         moveSpritesMsg.append(":").append(occupant.getCharacterName());
+      }
+
+      moveSpritesMsg.append("#").append(newRoom.getRoomName());
+
+      for (Player occupant : newRoom.getOccupants())
+      {
+         moveSpritesMsg.append(":").append(occupant.getCharacterName());
+      }
+
+      return moveSpritesMsg.toString();
+   }
+
+
+   public ArrayList<Player> getPlayers()
+   {
+
+      return _players;
+   }
+
+
+   public Player getNextPlayer()
+   {
+
+      return _players.get(++_turn % _players.size());
+   }
+
+
+   public void handleEndTurn()
+   {
+
+      // TODO end turn messaging if necessary - Sean
+      // TODO should this be called by the client handler? - Sean
+
+      if (!isGameOver())
+      {
+         startTurn(getNextPlayer());
+      } else
+      {
+         // TODO end of game procedures - Sean
+      }
+   }
+
+
+   public void handleMoveRequest(Player player, String room)
+   {
+      // TODO - is this a duplicate function of updateLocation?
+      Room destination = _gameboard.findRoom(room);
+      _gameboard.movePlayer(player, destination);
+      //TODO broadcast move to all players
+   }
+
+
+   public void handleAccusationCommand(Suggestion accusation)
+   {
+
+      broadcast(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
+
+      if (_deckController.checkAccusation(accusation))
+      {
+         _gameOver = true;
+         broadcast(_players.get(_turn).getUserName() + "'s accusation was correct!");
+         broadcast("The game is over!");
+
+         // TODO - end game sequence
+      } else
+      {
+         broadcast(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
+         _players.get(_turn).setIsActive(false);
+      }
+
+      // TODO - trigger end of turn?
+   }
+
+
+   public boolean isGameOver()
+   {
+
+      if (_gameOver)
+      {
+         return true;
+      }
+
+      int activePlayerCount = 0;
+
+      for (Player player : _players)
+      {
+         if (player.getIsActive())
+         {
+            activePlayerCount++;
+         }
+      }
+
+      return activePlayerCount <= 1;
+   }
+
+
+   public void attemptToStart()
+   {
+
+      if (_players.size() < 3)
+      {
+         broadcast("Not enough players to start a game (currently have " + _players.size() + ", need at least 3)");
+         return;
+      } else
+      {
+         for (Player player : _players)
+         {
+            if (!player.getIsReady())
+            {
+               broadcast("Not all players are ready to start the game...");
+               return;
             }
+         }
+         startTurn(getNextPlayer());
+      }
+   }
 
-            if(possibleCards.isEmpty()){
-                _mark ++;
-                _mark %= _players.size();
-            }
-            else break;
-        }
 
-        if(!possibleCards.isEmpty()){
-            _server.broadcastToAll(_players.get(_mark).getUserName() + " can disprove the suggestion.");
-            //TODO _players.get(mark). disproveSuggestion(possibleCards)
-        }
-        else{
-            _server.broadcastToAll("Nobody disproved the suggestion.");
-        }
-    }
+   public void broadcast(String message)
+   {
 
-    public void handleDisproven(Card card){
-        _server.broadcastToAll(_players.get(_mark).getUserName() + " has shown a card to " + _players.get(_turn).getUserName());
-        ClientHandler currentHandler = getClientHandler(_players.get(_turn));
-        currentHandler.writeToClient(_players.get(_mark).getUserName() + " has shown you the " + card.getCardName());
-    }
+      for (Player player : _players)
+      {
+         player.sendToClient(message);
+      }
+   }
 
-    public void handleAccusationCommand(Suggestion accusation){
-        _server.broadcastToAll(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
 
-        if(_deckController.checkAccusation(accusation)){
-            _gameOver = true;
-            _server.broadcastToAll(_players.get(_turn).getUserName() + "'s accusation was correct!");
-            _server.broadcastToAll("The game is over!");
-        }
-        else{
-            _server.broadcastToAll(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
-        }
-    }
+   private void startTurn(Player currentPlayer)
+   {
+      // TODO build appropriate message to be received in client app - Sean
 
-    public boolean isGameOver(){
-        return _gameOver;
-    }
+      StringBuilder msg = new StringBuilder("startTurn");
+      currentPlayer.sendToClient(msg.toString());
+   }
 
-    private ClientHandler getClientHandler(Player player){
-        for (ClientHandler handler : _server.getCients()) {
-            if(handler.getPlayer().getCharacterName().equalsIgnoreCase(player.getCharacterName())){
-                return handler;
-            }
-        }
-        return null;
-    }
+
+   public boolean disproveSequence(Suggestion suggestion)
+   {
+
+      int mark = _turn + 1;
+
+      Player playerToCheck;
+
+      while ((mark % _players.size()) != (_turn % _players.size()))
+      {
+         playerToCheck = _players.get(mark);
+         ArrayList<Card> matchingCards = playerToCheck.getPlayerHand().getMatchingCards(suggestion);
+
+         if (matchingCards.size() > 0)
+         {
+            broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
+            // TODO send disprove message to client - Sean
+            return true;
+         } else
+         {
+            broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
+            mark++;
+         }
+      }
+      return false;
+   }
+
+
+   public void addPlayer(Player player)
+   {
+
+      _players.add(player);
+   }
+
+
 }

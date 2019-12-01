@@ -1,6 +1,7 @@
 package edu.jhu.teamundecided.clueless.server;
 
 import edu.jhu.teamundecided.clueless.database.Database;
+import edu.jhu.teamundecided.clueless.deck.Suggestion;
 import edu.jhu.teamundecided.clueless.player.Player;
 
 import java.io.*;
@@ -35,7 +36,9 @@ public class ClientHandler extends Thread
 
             _serverApp = server.getServerApp();
 
-            _player = new Player();
+            _player = new Player(this);
+
+           gameController.addPlayer(_player);
         }
         catch (IOException e)
         {
@@ -100,15 +103,30 @@ public class ClientHandler extends Thread
                 setPlayerCharacter(tokens[1]); // ClientHandler Method
                 break;
             case "logoff":
-                handleLoggoff(tokens[1]); // ClientHandler Method
+                handleLogoff(tokens[1]); // ClientHandler Method
                 break;
             case "shutdownServer":
                 gameController.getGameServer().shutdown();
                 break;
+           case "suggestion":
+              handleSuggestionFromClient(tokens[1]);
+              break;
         }
     }
 
-    public void broadcast(String message)
+
+   private void handleSuggestionFromClient(String tokens)
+   {
+      // TODO - unpack tokens and use it to create suggestion object - Sean
+      // TODO - broadcast that the player has made a suggestion
+
+      Suggestion suggestion = new Suggestion(null, null, null);
+
+      boolean wasDisproven = gameController.disproveSequence(suggestion);
+   }
+
+
+   public void broadcast(String message)
     {
         for (ClientHandler client : gameController.getGameServer().getCients())
         {
@@ -144,6 +162,9 @@ public class ClientHandler extends Thread
         broadcast("disableCharacter:" + name);
         _player.setCharacterName(name);
         _player.setLocation(gameController.getGameBoard().findRoom(name + "startloc"));
+
+        // TODO this may not go here, but it goes somewhere in this class
+        setIsReady(true);
     }
 
     private void getSuggestionRoom(String token)
@@ -176,12 +197,12 @@ public class ClientHandler extends Thread
         writeToClient("moveDialog:hallway_1:hallway_2:hallway_4#" + database.getHallwayDirections("hall"));
     }
 
-    public void updateLocations(String roomname)
+    public void updateLocations(String roomName)
     {
-        broadcast(gameController.updateLocations(_player, roomname));
+        broadcast(gameController.updateLocations(_player, roomName));
     }
 
-    public void handleLoggoff(String name)
+    public void handleLogoff(String name)
     {
         gameController.getGameServer().removeHandler(this);
         try
@@ -231,5 +252,12 @@ public class ClientHandler extends Thread
         _reader.close();
         _writer.close();
         socket.close();
+    }
+
+
+    private void setIsReady(boolean isReady)
+    {
+        _player.setIsReady(true);
+        gameController.attemptToStart();
     }
 }

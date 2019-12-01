@@ -142,10 +142,21 @@ public class ClientAppController
             case "moveSprites":
                 _clientApp.getClientGameBoard().handleSpriteMovement(tokens[1]);
                 break;
+            case "startTurn":
+                handleStartTurn();
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }
     }
+
+
+    private void handleStartTurn()
+    {
+        // TODO - Sean
+        System.out.println("handleStartTurn method under construction...");
+    }
+
 
     private void addToClientDisabledCharacterList(String list)
     {

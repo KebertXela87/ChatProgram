@@ -1,6 +1,7 @@
 package edu.jhu.teamundecided.clueless.player;
 
 import edu.jhu.teamundecided.clueless.deck.Card;
+import edu.jhu.teamundecided.clueless.deck.Suggestion;
 
 import java.util.ArrayList;
 
@@ -58,4 +59,31 @@ public class Hand
 
         return hand.toString();
     }
+
+
+   public ArrayList<Card> getMatchingCards(Suggestion suggestion)
+   {
+
+       ArrayList<Card> matchingCards = new ArrayList<>();
+
+       for (Card suggestedCard : suggestion.getSuggestedCards())
+       {
+           for (Card playerCard : _cards)
+           {
+               if (suggestedCard.isSameAs(playerCard))
+               {
+                   matchingCards.add(playerCard);
+               }
+           }
+       }
+
+       return matchingCards;
+   }
+
+
+
+
+
+
+
 }
