@@ -111,6 +111,9 @@ public class ClientHandler extends Thread
            case "suggestion":
               handleSuggestionFromClient(tokens[1]);
               break;
+           case "readytoplay":
+              setIsReady(true);
+              break;
         }
     }
 
@@ -162,9 +165,6 @@ public class ClientHandler extends Thread
         broadcast("disableCharacter:" + name);
         _player.setCharacterName(name);
         _player.setLocation(gameController.getGameBoard().findRoom(name + "startloc"));
-
-        // TODO this may not go here, but it goes somewhere in this class
-        setIsReady(true);
     }
 
     private void getSuggestionRoom(String token)
@@ -258,6 +258,7 @@ public class ClientHandler extends Thread
     private void setIsReady(boolean isReady)
     {
         _player.setIsReady(true);
-        gameController.attemptToStart();
+       broadcast(_player.getUserName() + " is ready to play!");
+       gameController.attemptToStart();
     }
 }
