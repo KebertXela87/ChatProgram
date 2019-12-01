@@ -212,7 +212,8 @@ public class GameController
                return;
             }
          }
-         startTurn(getNextPlayer());
+
+         startGame();
       }
    }
 
@@ -224,6 +225,12 @@ public class GameController
       {
          player.sendToClient(message);
       }
+   }
+
+   private void startGame()
+   {
+       _deckController.dealCards(_players);
+       startTurn(getNextPlayer());
    }
 
 

@@ -81,7 +81,7 @@ public class DeckController
         _decks.forEach(Deck::shuffleCards);
     }
 
-    public boolean dealCards(ArrayList<Player> players) throws IOException
+    public boolean dealCards(ArrayList<Player> players)
     {
         // This method will deal all the cards to all the players
         if (players == null)
