@@ -43,13 +43,10 @@ public class Suggestion
     public String toString()
     {
         return _suspect + " did it with the " + _weapon + " in the " + _room;
-
     }
 
     public String getSuspect()
     {
-
         return _suspect;
-
     }
 }

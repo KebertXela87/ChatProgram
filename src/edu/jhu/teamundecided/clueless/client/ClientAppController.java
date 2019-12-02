@@ -148,6 +148,9 @@ public class ClientAppController
             case "disproveSuggestion":
                 DialogController.getInstance().createDisproveDialog(this, tokens[1]);
                 break;
+            case "revealedCard":
+                DialogController.getInstance().createRevealedDialog(this, tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }

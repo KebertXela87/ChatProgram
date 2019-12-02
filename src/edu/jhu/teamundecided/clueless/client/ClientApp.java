@@ -135,6 +135,7 @@ public class ClientApp
             {
                 controller.writeToServer("readytoplay");
                 _readyButton.setEnabled(false);
+                controller.writeToServer("testDisprove");// TEST CODE
             }
         });
     }

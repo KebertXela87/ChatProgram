@@ -78,6 +78,8 @@ public class GameController
 
       return list.toString();
 
+
+
    }
 
 
@@ -92,6 +94,7 @@ public class GameController
 
       // Update Player Object Location
       _gameboard.movePlayer(player, newRoom); // GameBoard Method
+      broadcast(player.getCharacterName() + " moved to the " + newRoomName);
 
       moveSpritesMsg.append(oldRoom.getRoomName());
 
@@ -144,7 +147,10 @@ public class GameController
          startTurn(getNextPlayer());
       } else
       {
-         // TODO end of game procedures - Sean
+         Player winner = getActivePlayers().get(0);
+         broadcast(winner.getUserName() + " is the last remaining player.");
+         broadcast(winner.getUserName() + " wins!");
+         endGame();
       }
    }
 
@@ -168,11 +174,11 @@ public class GameController
          _gameOver = true;
          broadcast(_players.get(_turn).getUserName() + "'s accusation was correct!");
          broadcast("The game is over!");
-
-         // TODO - end game sequence
+         endGame();
       } else
       {
          broadcast(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
+         broadcast(_players.get(_turn).getUserName() + " is now inactive.");
          _players.get(_turn).setIsActive(false);
       }
 
@@ -188,17 +194,22 @@ public class GameController
          return true;
       }
 
-      int activePlayerCount = 0;
+      int activePlayerCount = getActivePlayers().size();
 
+      return activePlayerCount <= 1;
+   }
+
+   private ArrayList<Player> getActivePlayers()
+   {
+      ArrayList<Player> activePlayers = new ArrayList<Player>();
       for (Player player : _players)
       {
          if (player.getIsActive())
          {
-            activePlayerCount++;
+            activePlayers.add(player);
          }
       }
-
-      return activePlayerCount <= 1;
+      return activePlayers;
    }
 
 
@@ -288,6 +299,8 @@ public class GameController
 
    public boolean disproveSequence(Suggestion suggestion)
    {
+      // Move suspect to suggested room
+      updateLocations(getPlayerFromList(suggestion.getSuspect()), _players.get(_turn).getLocation().getRoomName());
 
       int mark = _turn + 1;
 
@@ -304,25 +317,23 @@ public class GameController
          {
             ArrayList<Card> matchingCards = playerToCheck.getPlayerHand().getMatchingCards(suggestion);
 
-            if (matchingCards.size() > 0)
-            {
-               broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
-               sendDisproveRequest(playerToCheck, matchingCards);
-               return true;
-            } else
-            {
-               broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
-               mark++;
-            }
+         if (matchingCards.size() > 0)
+         {
+            broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
+            sendDisproveRequest(playerToCheck, matchingCards);
+            return true;
+         }
+         else
+         {
+            broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
+            mark++;
          }
       }
       return false;
    }
 
-
    private void sendDisproveRequest(Player disprovingPlayer, ArrayList<Card> matchingCards)
    {
-
       StringBuilder message = new StringBuilder("disproveSuggestion");
       for (Card card : matchingCards)
       {
@@ -331,6 +342,13 @@ public class GameController
       disprovingPlayer.sendToClient(message.toString());
    }
 
+   public void revealCard(String card)
+   {
+       // TEST CODE
+       _players.get(0).sendToClient("revealedCard:" + card);
+
+//       _players.get(_turn).sendToClient("revealedCard:" + card);
+   }
 
    public void addPlayer(Player player)
    {
@@ -338,5 +356,30 @@ public class GameController
       _players.add(player);
    }
 
+   public void endGame()
+   {
+      _server.broadcastToAll("Shutting down now");
+      _server.shutdown();
+   }
 
+   private Player getPlayerFromList(String name)
+   {
+      for (Player player : _players)
+      {
+         if (player.getCharacterName().equalsIgnoreCase(name))
+         {
+            return player;
+         }
+      }
+
+      // No player found, this means that the character is an NPC
+      return createNPC(name);
+   }
+
+   private Player createNPC(String name)
+   {
+      Player npc = new Player(name, getGameBoard().findRoom(name + "startloc"));
+      _players.add(npc);
+      return npc;
+   }
 }
