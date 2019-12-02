@@ -33,6 +33,9 @@ public class DialogController
     private notebookDialog _notebookDialog = null;
 
     private String _suggestOptions;
+    private ButtonGroup disproveButtonGroup;
+
+    private String _revealedCard;
 
     public DialogController()
     {}
@@ -243,6 +246,7 @@ public class DialogController
         _notebookDialog.setVisible(true);
     }
 
+    // DISPROVE PANEL
     public void createDisproveDialog(ClientAppController controller, String suggestOptions)
     {
         setSuggestOptions(suggestOptions);
@@ -264,11 +268,16 @@ public class DialogController
         this._suggestOptions = suggestOptions;
     }
 
+    public ButtonGroup getDisproveButtonGroup()
+    {
+        return disproveButtonGroup;
+    }
+
     public JPanel getDisprovePanel()
     {
         String[] options;
         JPanel disprovePanel = new JPanel();
-        ButtonGroup disproveButtonGroup = new ButtonGroup();
+        disproveButtonGroup = new ButtonGroup();
 
         options = getSuggestOptions().split(":");
 
@@ -298,5 +307,45 @@ public class DialogController
         }
 
         return disprovePanel;
+    }
+
+    // REVEALED PANEL
+    public void createRevealedDialog(ClientAppController controller, String revealedCard)
+    {
+        setRevealedCard(revealedCard);
+        revealedDialog dialog = new revealedDialog();
+        dialog.setTitle("Revealed Card!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
+    }
+
+    public String getRevealedCard()
+    {
+        StringBuilder revealedCardDir = new StringBuilder(_cardFilepath);
+
+        if(Database.getInstance().getCharacterNames().containsKey(_revealedCard))
+        {
+            revealedCardDir.append("suspects/");
+        }
+        if(Database.getInstance().getWeaponNames().containsKey(_revealedCard))
+        {
+            revealedCardDir.append("weapons/");
+        }
+        if(Database.getInstance().getRoomNames().containsKey(_revealedCard))
+        {
+            revealedCardDir.append("rooms/");
+        }
+
+        revealedCardDir.append(_revealedCard).append(".jpg");
+
+        System.out.println(revealedCardDir.toString());
+        return revealedCardDir.toString();
+    }
+
+    public void setRevealedCard(String revealedCard)
+    {
+        this._revealedCard = revealedCard;
     }
 }

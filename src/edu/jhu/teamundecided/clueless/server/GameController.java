@@ -260,7 +260,8 @@ public class GameController
             broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
             sendDisproveRequest(playerToCheck, matchingCards);
             return true;
-         } else
+         }
+         else
          {
             broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
             mark++;
@@ -277,6 +278,14 @@ public class GameController
          message.append(":").append(card.getCardName());
       }
       disprovingPlayer.sendToClient(message.toString());
+   }
+
+   public void revealCard(String card)
+   {
+       // TEST CODE
+       _players.get(0).sendToClient("revealedCard:" + card);
+
+//       _players.get(_turn).sendToClient("revealedCard:" + card);
    }
 
    public void addPlayer(Player player)

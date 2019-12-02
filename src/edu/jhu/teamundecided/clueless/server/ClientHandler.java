@@ -111,8 +111,14 @@ public class ClientHandler extends Thread
             case "suggestion":
                 handleSuggestionFromClient(tokens[1]);
                 break;
+            case "revealCard":
+                handleRevealedCard(tokens[1]);
+                break;
             case "readytoplay":
                 setIsReady(true);
+                break;
+            case "testDisprove": // TEST CODE
+                writeToClient("disproveSuggestion:hall:mustard");
                 break;
         }
     }
@@ -136,6 +142,10 @@ public class ClientHandler extends Thread
       boolean wasDisproven = gameController.disproveSequence(suggestion);
    }
 
+   private void handleRevealedCard(String revealedCard)
+   {
+       gameController.revealCard(revealedCard);
+   }
 
    public void broadcast(String message)
     {
