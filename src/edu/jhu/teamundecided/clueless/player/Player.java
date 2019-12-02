@@ -89,7 +89,10 @@ public class Player
    public void sendToClient(String message)
    {
 
-      _clientHandler.writeToClient(message);
+      if (!isNPC())
+      {
+         _clientHandler.writeToClient(message);
+      }
    }
 
 
@@ -105,5 +108,13 @@ public class Player
 
       return _isActive;
    }
+
+
+   public boolean isNPC()
+   {
+
+      return _playerHand == null;
+   }
+
 
 }

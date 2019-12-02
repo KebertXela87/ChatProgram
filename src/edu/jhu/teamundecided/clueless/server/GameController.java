@@ -1,5 +1,6 @@
 package edu.jhu.teamundecided.clueless.server;
 
+import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.deck.Card;
 import edu.jhu.teamundecided.clueless.deck.DeckController;
 import edu.jhu.teamundecided.clueless.deck.Suggestion;
@@ -77,8 +78,6 @@ public class GameController
 
       return list.toString();
 
-
-
    }
 
 
@@ -122,7 +121,15 @@ public class GameController
    public Player getNextPlayer()
    {
 
-      return _players.get(++_turn % _players.size());
+      Player nextPlayer;
+
+      do
+      {
+         _turn = ++_turn % _players.size();
+         nextPlayer = _players.get(_turn);
+      } while (nextPlayer.isNPC());
+
+      return nextPlayer;
    }
 
 
@@ -227,10 +234,46 @@ public class GameController
       }
    }
 
+
    private void startGame()
    {
-       _deckController.dealCards(_players);
-       startTurn(getNextPlayer());
+
+      _deckController.dealCards(_players);
+
+      rearrangePlayers(); // includes create npcs
+
+      startTurn(getNextPlayer());
+   }
+
+
+   private void rearrangePlayers()
+   {
+
+      ArrayList<Player> newPlayers = new ArrayList<>();
+      boolean characterFound;
+
+      for (String character : Database.getInstance().getCharacterNames().keySet())
+      {
+         characterFound = false;
+
+         // search the players for character key
+         for (Player player : _players)
+         {
+            if (player.getCharacterName().equalsIgnoreCase(character))
+            {
+               newPlayers.add(player);
+               characterFound = true;
+               break;
+            }
+         }
+
+         if (!characterFound)
+         {
+            // TODO - add NPC (Andy)
+         }
+      }
+
+      _players = newPlayers;
    }
 
 
@@ -250,27 +293,36 @@ public class GameController
 
       Player playerToCheck;
 
-      while ((mark % _players.size()) != (_turn % _players.size()))
+      while ((mark % _players.size()) != _turn)
       {
          playerToCheck = _players.get(mark);
-         ArrayList<Card> matchingCards = playerToCheck.getPlayerHand().getMatchingCards(suggestion);
 
-         if (matchingCards.size() > 0)
+         if (playerToCheck.isNPC())
          {
-            broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
-            sendDisproveRequest(playerToCheck, matchingCards);
-            return true;
+            continue;
          } else
          {
-            broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
-            mark++;
+            ArrayList<Card> matchingCards = playerToCheck.getPlayerHand().getMatchingCards(suggestion);
+
+            if (matchingCards.size() > 0)
+            {
+               broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
+               sendDisproveRequest(playerToCheck, matchingCards);
+               return true;
+            } else
+            {
+               broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
+               mark++;
+            }
          }
       }
       return false;
    }
 
+
    private void sendDisproveRequest(Player disprovingPlayer, ArrayList<Card> matchingCards)
    {
+
       StringBuilder message = new StringBuilder("disproveSuggestion");
       for (Card card : matchingCards)
       {
@@ -278,6 +330,7 @@ public class GameController
       }
       disprovingPlayer.sendToClient(message.toString());
    }
+
 
    public void addPlayer(Player player)
    {

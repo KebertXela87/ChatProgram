@@ -44,12 +44,12 @@ public class Database
     private void  setupCharacterNames()
     {
         _characterNames = new LinkedHashMap<>();
-        _characterNames.put("green", "Mr. Green");
+        _characterNames.put("scarlett", "Ms. Scarlett");
         _characterNames.put("mustard", "Col. Mustard");
+        _characterNames.put("white", "Mr. White");
+        _characterNames.put("green", "Mr. Green");
         _characterNames.put("peacock", "Mrs. Peacock");
         _characterNames.put("plum", "Prof. Plum");
-        _characterNames.put("scarlett", "Ms. Scarlett");
-        _characterNames.put("white", "Mr. White");
     }
 
     public String getCharacterName(String key)
