@@ -93,6 +93,7 @@ public class GameController
 
       // Update Player Object Location
       _gameboard.movePlayer(player, newRoom); // GameBoard Method
+      broadcast(player.getCharacterName() + " moved to the " + newRoomName);
 
       moveSpritesMsg.append(oldRoom.getRoomName());
 
@@ -137,19 +138,12 @@ public class GameController
          startTurn(getNextPlayer());
       } else
       {
-         // TODO end of game procedures - Sean
+         Player winner = getActivePlayers().get(0);
+         broadcast(winner.getUserName() + " is the last remaining player.");
+         broadcast(winner.getUserName() + " wins!");
+         endGame();
       }
    }
-
-
-   public void handleMoveRequest(Player player, String room)
-   {
-      // TODO - is this a duplicate function of updateLocation?
-      Room destination = _gameboard.findRoom(room);
-      _gameboard.movePlayer(player, destination);
-      //TODO broadcast move to all players
-   }
-
 
    public void handleAccusationCommand(Suggestion accusation)
    {
@@ -161,11 +155,11 @@ public class GameController
          _gameOver = true;
          broadcast(_players.get(_turn).getUserName() + "'s accusation was correct!");
          broadcast("The game is over!");
-
-         // TODO - end game sequence
+         endGame();
       } else
       {
          broadcast(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
+         broadcast(_players.get(_turn).getUserName() + " is now inactive.");
          _players.get(_turn).setIsActive(false);
       }
 
@@ -181,17 +175,21 @@ public class GameController
          return true;
       }
 
-      int activePlayerCount = 0;
+      int activePlayerCount = getActivePlayers().size();
 
+      return activePlayerCount <= 1;
+   }
+
+   private ArrayList<Player> getActivePlayers(){
+      ArrayList<Player> activePlayers = new ArrayList<Player>();
       for (Player player : _players)
       {
          if (player.getIsActive())
          {
-            activePlayerCount++;
+            activePlayers.add(player);
          }
       }
-
-      return activePlayerCount <= 1;
+      return activePlayers;
    }
 
 
@@ -245,6 +243,8 @@ public class GameController
 
    public boolean disproveSequence(Suggestion suggestion)
    {
+      broadcast(_players.get(_turn) + " has suggested that " + suggestion.toString());
+      updateLocations(getPlayerFromCard(suggestion.getCard(Card.CardType.Suspect)), _players.get(_turn).getLocation().getRoomName());
 
       int mark = _turn + 1;
 
@@ -294,5 +294,17 @@ public class GameController
       _players.add(player);
    }
 
+   public void endGame(){
+      _server.broadcastToAll("Shutting down now");
+      _server.shutdown();
+   }
 
+   private Player getPlayerFromCard(Card card){
+      for (Player p : _players) {
+         if (p.getCharacterName().equalsIgnoreCase(card.getCardName())){
+            return p;
+         }
+      }
+      return null;
+   }
 }
