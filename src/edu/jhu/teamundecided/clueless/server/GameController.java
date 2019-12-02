@@ -148,7 +148,7 @@ public class GameController
          Player winner = getActivePlayers().get(0);
          broadcast(winner.getUserName() + " is the last remaining player.");
          broadcast(winner.getUserName() + " wins!");
-         // endGame();
+         endGame();
       }
    }
 
@@ -172,7 +172,7 @@ public class GameController
          _gameOver = true;
          broadcast(_players.get(_turn).getUserName() + "'s accusation was correct!");
          broadcast("The game is over!");
-         // endGame();
+         endGame();
       } else
       {
          broadcast(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
