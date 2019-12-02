@@ -32,6 +32,8 @@ public class DialogController
 
     private notebookDialog _notebookDialog = null;
 
+    private String _suggestOptions;
+
     public DialogController()
     {}
 
@@ -239,5 +241,62 @@ public class DialogController
         _notebookDialog.pack();
         _notebookDialog.setLocationRelativeTo(controller.getFrame());
         _notebookDialog.setVisible(true);
+    }
+
+    public void createDisproveDialog(ClientAppController controller, String suggestOptions)
+    {
+        setSuggestOptions(suggestOptions);
+        disproveDialog dialog = new disproveDialog(controller);
+        dialog.setTitle("Disprove the Suggestion!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
+    }
+
+    public String getSuggestOptions()
+    {
+        return _suggestOptions;
+    }
+
+    public void setSuggestOptions(String suggestOptions)
+    {
+        this._suggestOptions = suggestOptions;
+    }
+
+    public JPanel getDisprovePanel()
+    {
+        String[] options;
+        JPanel disprovePanel = new JPanel();
+        ButtonGroup disproveButtonGroup = new ButtonGroup();
+
+        options = getSuggestOptions().split(":");
+
+        for (String option : options)
+        {
+            JRadioButton temp;
+            String subdir = "";
+            if(Database.getInstance().getCharacterNames().containsKey(option))
+            {
+                subdir = "suspects/";
+            }
+            if(Database.getInstance().getWeaponNames().containsKey(option))
+            {
+                subdir = "weapons/";
+            }
+            if(Database.getInstance().getRoomNames().containsKey(option))
+            {
+                subdir = "rooms/";
+            }
+
+            temp = new JRadioButton(new ImageIcon(_cardFilepath + subdir + option + ".jpg"));
+            temp.setSelectedIcon(new ImageIcon(_cardFilepath + subdir + "selected/" + option + "Selected.jpg"));
+
+            temp.setName(option);
+            disproveButtonGroup.add(temp);
+            disprovePanel.add(temp);
+        }
+
+        return disprovePanel;
     }
 }

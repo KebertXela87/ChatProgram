@@ -24,6 +24,7 @@ public class ClientApp
     private JButton _endTurnButton;
     private JButton _logoutButton;
     private JButton _handButton;
+    private JButton _readyButton;
 
     public ClientApp(ClientAppController controller)
     {
@@ -124,6 +125,16 @@ public class ClientApp
             public void actionPerformed(ActionEvent e)
             {
                 controller.getFrame().dispatchEvent(new WindowEvent(controller.getFrame(), WindowEvent.WINDOW_CLOSING));
+            }
+        });
+
+        _readyButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.writeToServer("readytoplay");
+                _readyButton.setEnabled(false);
             }
         });
     }

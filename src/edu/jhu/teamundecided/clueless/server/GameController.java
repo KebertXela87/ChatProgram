@@ -258,7 +258,7 @@ public class GameController
          if (matchingCards.size() > 0)
          {
             broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
-            // TODO send disprove message to client - Sean
+            sendDisproveRequest(playerToCheck, matchingCards);
             return true;
          } else
          {
@@ -269,6 +269,15 @@ public class GameController
       return false;
    }
 
+   private void sendDisproveRequest(Player disprovingPlayer, ArrayList<Card> matchingCards)
+   {
+      StringBuilder message = new StringBuilder("disproveSuggestion");
+      for (Card card : matchingCards)
+      {
+         message.append(":").append(card.getCardName());
+      }
+      disprovingPlayer.sendToClient(message.toString());
+   }
 
    public void addPlayer(Player player)
    {

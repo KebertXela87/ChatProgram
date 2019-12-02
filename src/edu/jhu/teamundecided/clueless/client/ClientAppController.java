@@ -145,6 +145,9 @@ public class ClientAppController
             case "startTurn":
                 handleStartTurn();
                 break;
+            case "disproveSuggestion":
+                DialogController.getInstance().createDisproveDialog(this, tokens[1]);
+                break;
             default:
                 getClientApp().writeToScreen(message);
         }

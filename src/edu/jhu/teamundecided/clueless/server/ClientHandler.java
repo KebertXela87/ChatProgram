@@ -108,22 +108,30 @@ public class ClientHandler extends Thread
             case "shutdownServer":
                 gameController.getGameServer().shutdown();
                 break;
-           case "suggestion":
-              handleSuggestionFromClient(tokens[1]);
-              break;
-           case "readytoplay":
-              setIsReady(true);
-              break;
+            case "suggestion":
+                handleSuggestionFromClient(tokens[1]);
+                break;
+            case "readytoplay":
+                setIsReady(true);
+                break;
         }
     }
 
 
-   private void handleSuggestionFromClient(String tokens)
+   private void handleSuggestionFromClient(String message)
    {
-      // TODO - unpack tokens and use it to create suggestion object - Sean
-      // TODO - broadcast that the player has made a suggestion
+       String[] tokens = message.split(":");
+       String suspect = tokens[0];
+       String weapon = tokens[1];
+       String room = tokens[2];
 
-      Suggestion suggestion = new Suggestion(null, null, null);
+       StringBuilder suggestmsg = new StringBuilder(_player.getUserName());
+       suggestmsg.append(" has made a suggestion that it was ").append(Database.getInstance().getCharacterName(suspect));
+       suggestmsg.append(" with the ").append(Database.getInstance().getWeaponName(weapon));
+       suggestmsg.append(" in the ").append(Database.getInstance().getRoomName(room));
+       broadcast(suggestmsg.toString());
+
+      Suggestion suggestion = new Suggestion(suspect, weapon, room);
 
       boolean wasDisproven = gameController.disproveSequence(suggestion);
    }
