@@ -38,7 +38,7 @@ public class ClientHandler extends Thread
 
             _player = new Player(this);
 
-           gameController.addPlayer(_player);
+            gameController.addPlayer(_player);
         }
         catch (IOException e)
         {
@@ -131,15 +131,13 @@ public class ClientHandler extends Thread
        String weapon = tokens[1];
        String room = tokens[2];
 
+       Suggestion suggestion = new Suggestion(suspect, weapon, room);
+
        StringBuilder suggestmsg = new StringBuilder(_player.getUserName());
-       suggestmsg.append(" has made a suggestion that it was ").append(Database.getInstance().getCharacterName(suspect));
-       suggestmsg.append(" with the ").append(Database.getInstance().getWeaponName(weapon));
-       suggestmsg.append(" in the ").append(Database.getInstance().getRoomName(room));
+       suggestmsg.append(" has made a suggestion that ").append(suggestion.toString());
        broadcast(suggestmsg.toString());
 
-      Suggestion suggestion = new Suggestion(suspect, weapon, room);
-
-      boolean wasDisproven = gameController.disproveSequence(suggestion);
+       boolean wasDisproven = gameController.disproveSequence(suggestion);
    }
 
    private void handleRevealedCard(String revealedCard)

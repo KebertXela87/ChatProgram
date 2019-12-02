@@ -180,7 +180,8 @@ public class GameController
       return activePlayerCount <= 1;
    }
 
-   private ArrayList<Player> getActivePlayers(){
+   private ArrayList<Player> getActivePlayers()
+   {
       ArrayList<Player> activePlayers = new ArrayList<Player>();
       for (Player player : _players)
       {
@@ -243,8 +244,8 @@ public class GameController
 
    public boolean disproveSequence(Suggestion suggestion)
    {
-      broadcast(_players.get(_turn) + " has suggested that " + suggestion.toString());
-      updateLocations(getPlayerFromCard(suggestion.getCard(Card.CardType.Suspect)), _players.get(_turn).getLocation().getRoomName());
+      // Move suspect to suggested room
+      updateLocations(getPlayerFromList(suggestion.getSuspect()), _players.get(_turn).getLocation().getRoomName());
 
       int mark = _turn + 1;
 
@@ -290,21 +291,33 @@ public class GameController
 
    public void addPlayer(Player player)
    {
-
       _players.add(player);
    }
 
-   public void endGame(){
+   public void endGame()
+   {
       _server.broadcastToAll("Shutting down now");
       _server.shutdown();
    }
 
-   private Player getPlayerFromCard(Card card){
-      for (Player p : _players) {
-         if (p.getCharacterName().equalsIgnoreCase(card.getCardName())){
-            return p;
+   private Player getPlayerFromList(String name)
+   {
+      for (Player player : _players)
+      {
+         if (player.getCharacterName().equalsIgnoreCase(name))
+         {
+            return player;
          }
       }
-      return null;
+
+      // No player found, this means that the character is an NPC
+      return createNPC(name);
+   }
+
+   private Player createNPC(String name)
+   {
+      Player npc = new Player(name, getGameBoard().findRoom(name + "startloc"));
+      _players.add(npc);
+      return npc;
    }
 }
