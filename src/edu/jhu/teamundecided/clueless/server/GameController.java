@@ -290,10 +290,56 @@ public class GameController
 
    private void startTurn(Player currentPlayer)
    {
-      // TODO build appropriate message to be received in client app - Sean
+       boolean move = false;
+       boolean suggest = false;
+       boolean accuse = true; // Accuse is always going to be TRUE
+       boolean endturn = false;
 
-      StringBuilder msg = new StringBuilder("startTurn");
-      currentPlayer.sendToClient(msg.toString());
+       StringBuilder startTurnMessage = new StringBuilder("startturn");
+
+       // Get Player's Character name
+       startTurnMessage.append(":").append(currentPlayer.getCharacterName());
+
+       // Check Position
+
+       // If in starting location
+       if (currentPlayer.getLocation().getRoomName().contains("StartLoc"))
+       {
+           move = true;
+       }
+       else
+       {
+           // If in a Hallway
+           if (currentPlayer.getLocation().getIsHall())
+           {
+               move = true;
+           }
+           else // In a room
+           {
+               // was moved by another player
+               if(currentPlayer.getMoved())
+               {
+                  suggest = true;
+               }
+
+               // Check for possible moves
+               if(currentPlayer.getLocation().getPossibleMoves().size() <= 0)
+               {
+                  endturn = true;
+               }
+               else
+               {
+                  move = true;
+               }
+           }
+       }
+
+       startTurnMessage.append(":").append(Boolean.toString(move));
+       startTurnMessage.append(":").append(Boolean.toString(suggest));
+       startTurnMessage.append(":").append(Boolean.toString(accuse));
+       startTurnMessage.append(":").append(Boolean.toString(endturn));
+
+       currentPlayer.sendToClient(startTurnMessage.toString());
    }
 
 
@@ -313,7 +359,8 @@ public class GameController
          if (playerToCheck.isNPC())
          {
             continue;
-         } else
+         }
+         else
          {
             ArrayList<Card> matchingCards = playerToCheck.getPlayerHand().getMatchingCards(suggestion);
 
@@ -322,7 +369,8 @@ public class GameController
                broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
                sendDisproveRequest(playerToCheck, matchingCards);
                return true;
-            } else
+            }
+            else
             {
                broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
                mark++;

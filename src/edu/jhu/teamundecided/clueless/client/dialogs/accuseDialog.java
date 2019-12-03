@@ -11,9 +11,9 @@ public class accuseDialog extends JDialog
     private JPanel contentPane;
     private JButton _accuseButton;
     private JButton _cancelButton;
-    private JComboBox _suspectComboBox;
-    private JComboBox _weaponComboBox;
-    private JComboBox _roomComboBox;
+    private JComboBox<String> _suspectComboBox;
+    private JComboBox<String> _weaponComboBox;
+    private JComboBox<String> _roomComboBox;
     private JLabel _suspectIcon;
     private JLabel _weaponIcon;
     private JLabel _roomIcon;
@@ -81,7 +81,8 @@ public class accuseDialog extends JDialog
         System.out.println(accusation);
 
         cac.getClientApp().getAccusationButton().setEnabled(false);
-        cac.getClientApp().getEndTurnButton().setEnabled(true);
+
+        cac.getClientApp().getEndTurnButton().setEnabled(false); // need to wait until Accusation response
 
         dispose();
     }

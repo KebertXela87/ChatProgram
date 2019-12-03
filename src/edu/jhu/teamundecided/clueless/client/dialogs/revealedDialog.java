@@ -1,5 +1,7 @@
 package edu.jhu.teamundecided.clueless.client.dialogs;
 
+import edu.jhu.teamundecided.clueless.client.ClientAppController;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -11,7 +13,7 @@ public class revealedDialog extends JDialog
     private JLabel _revealedCard;
     private JButton buttonCancel;
 
-    public revealedDialog()
+    public revealedDialog(ClientAppController cac)
     {
         setContentPane(contentPane);
         setModal(true);
@@ -21,7 +23,7 @@ public class revealedDialog extends JDialog
         {
             public void actionPerformed(ActionEvent e)
             {
-                onClose();
+                onClose(cac);
             }
         });
 
@@ -31,7 +33,7 @@ public class revealedDialog extends JDialog
         {
             public void windowClosing(WindowEvent e)
             {
-                onCancel();
+                onClose(cac);
             }
         });
 
@@ -40,20 +42,15 @@ public class revealedDialog extends JDialog
         {
             public void actionPerformed(ActionEvent e)
             {
-                onCancel();
+                onClose(cac);
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onClose()
+    private void onClose(ClientAppController cac)
     {
-        // add your code here
-        dispose();
-    }
+        cac.getClientApp().getEndTurnButton().setEnabled(true);
 
-    private void onCancel()
-    {
-        // add your code here if necessary
         dispose();
     }
 

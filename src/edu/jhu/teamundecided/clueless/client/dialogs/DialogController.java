@@ -315,7 +315,7 @@ public class DialogController
     public void createRevealedDialog(ClientAppController controller, String revealedCard)
     {
         setRevealedCard(revealedCard);
-        revealedDialog dialog = new revealedDialog();
+        revealedDialog dialog = new revealedDialog(controller);
         dialog.setTitle("Revealed Card!");
         dialog.setResizable(false);
         dialog.pack();

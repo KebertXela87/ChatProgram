@@ -84,7 +84,8 @@ public class suggestDialog extends JDialog
         System.out.println(suggestion);
 
         cac.getClientApp().getSuggestButton().setEnabled(false);
-        cac.getClientApp().getEndTurnButton().setEnabled(true);
+
+        cac.getClientApp().getEndTurnButton().setEnabled(false); // need to wait until suggestion response
 
         dispose();
     }
