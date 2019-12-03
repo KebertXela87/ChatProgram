@@ -37,6 +37,8 @@ public class DialogController
 
     private String _revealedCard;
 
+    private String _characterName;
+
     public DialogController()
     {}
 
@@ -348,4 +350,24 @@ public class DialogController
     {
         this._revealedCard = revealedCard;
     }
+
+    // START TURN PANEL
+    public void createStartTurnDialog(ClientAppController controller, String startTurnMsg)
+    {
+        String[] tokens = startTurnMsg.split(":", 2);
+        setCharacterName(tokens[0]);
+        startTurnDialog dialog = new startTurnDialog(controller, tokens[1]);
+        dialog.setTitle("Start Turn!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
+    }
+
+    public String getCharacterIcon()
+    {
+        return "./src/images/gameboard/sprites/characterSelect/" + _characterName + "_cs.png";
+    }
+
+    public void setCharacterName(String name) { this._characterName = name; }
 }

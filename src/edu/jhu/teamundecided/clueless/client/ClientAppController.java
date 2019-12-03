@@ -130,6 +130,9 @@ public class ClientAppController
             case "disableCharacter":
                 addToClientDisabledCharacterList(tokens[1]);
                 break;
+            case "startturn":
+                DialogController.getInstance().createStartTurnDialog(this, tokens[1]);
+                break;
             case "moveDialog":
                 DialogController.getInstance().createMoveDialog(this, tokens[1]);
                 break;

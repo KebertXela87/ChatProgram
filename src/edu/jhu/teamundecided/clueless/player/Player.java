@@ -13,10 +13,13 @@ public class Player
     private boolean _isReady;
     private ClientHandler _clientHandler;
 
+    private boolean _wasMoved;
+
     public Player(ClientHandler clientHandler)
     {
         _isReady = false;
         _clientHandler = clientHandler;
+        _playerHand = new Hand();
     }
 
     public Player(String npcName, Room startLoc)
@@ -24,6 +27,9 @@ public class Player
        _characterName = npcName;
        _userName = "NPC";
        _isActive = false;
+       _wasMoved = true;
+       _playerHand = null;
+
        setLocation(startLoc);
     }
 
@@ -111,4 +117,13 @@ public class Player
    }
 
 
+    public boolean getMoved()
+    {
+        return _wasMoved;
+    }
+
+    public void setMoved(boolean _wasMoved)
+    {
+        this._wasMoved = _wasMoved;
+    }
 }

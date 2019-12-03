@@ -40,6 +40,10 @@ Get Player in turn order (Start a loop through Players in turn order)
 		- Player needs to make a move
 		- Enable MOVE and ACCUSE buttons for Player
 
+	Start Turn message:
+
+	startturn:<characterName>:<canMove>:<canSuggest>:<canAccuse>:<canEndTurn>
+
 
 	MOVE SEQUENCE (Click the MOVE button)
 	- Open Move Dialog
