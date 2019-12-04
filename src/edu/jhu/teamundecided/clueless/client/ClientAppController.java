@@ -145,14 +145,14 @@ public class ClientAppController
             case "moveSprites":
                 _clientApp.getClientGameBoard().handleSpriteMovement(tokens[1]);
                 break;
-            case "startTurn":
-                handleStartTurn();
-                break;
             case "disproveSuggestion":
                 DialogController.getInstance().createDisproveDialog(this, tokens[1]);
                 break;
             case "revealedCard":
                 DialogController.getInstance().createRevealedDialog(this, tokens[1]);
+                break;
+            case "accuseresponse":
+                handleAccusationResponse(tokens[1]);
                 break;
             default:
                 getClientApp().writeToScreen(message);
@@ -160,11 +160,26 @@ public class ClientAppController
     }
 
 
-    private void handleStartTurn()
+    private void handleAccusationResponse(String msg)
     {
-        // TODO - Sean
-        System.out.println("handleStartTurn method under construction...");
+        String[] tokens = msg.split(":", 2);
+
+        String response = "";
+        // IF Match
+        if(Boolean.parseBoolean(tokens[0]))
+        {
+            // display end game response to client
+            response = "gameover:" + tokens[1];
+        }
+        else
+        {
+            // display accusation response panel to accuser
+            response = "lost" + tokens[1];
+        }
+
+        DialogController.getInstance().createAccusationResponsePanel(this,response);
     }
+
 
 
     private void addToClientDisabledCharacterList(String list)

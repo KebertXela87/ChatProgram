@@ -93,6 +93,8 @@ Get Player in turn order (Start a loop through Players in turn order)
 			- End their turn (bypass the END TURN button)
 			- Disable END TURN button for Player
 
+	accuseresponse:<match>:<username>:<suspect>:<weapon>:<room>
+
 
 	END TURN SEQUENCE (Click the END TURN button)
 	- Disable any enabled buttons for Player (MOVE, SUGGEST, ACCUSE, END TURN)

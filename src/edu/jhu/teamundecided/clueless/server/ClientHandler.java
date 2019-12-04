@@ -114,6 +114,9 @@ public class ClientHandler extends Thread
             case "revealCard":
                 handleRevealedCard(tokens[1]);
                 break;
+            case "accusation":
+
+                break;
             case "readytoplay":
                 setIsReady(true);
                 break;

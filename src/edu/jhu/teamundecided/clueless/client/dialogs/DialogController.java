@@ -39,6 +39,11 @@ public class DialogController
 
     private String _characterName;
 
+    private String _accusationResponse;
+    private String _casefileSuspect;
+    private String _casefileWeapon;
+    private String _casefileRoom;
+
     public DialogController()
     {}
 
@@ -370,4 +375,57 @@ public class DialogController
     }
 
     public void setCharacterName(String name) { this._characterName = name; }
+
+    // ACCUSE RESPONSE PANEL
+    public void createAccusationResponsePanel(ClientAppController controller, String response)
+    {
+        parseResponse(response);
+        accusationResponseDialog dialog = new accusationResponseDialog(controller);
+        dialog.setTitle("Accusation Response");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
+    }
+
+    private void parseResponse(String response)
+    {
+        String[] tokens = response.split(":");
+        String responseType = tokens[0];
+        String username = tokens[1];
+
+        _casefileSuspect = tokens[2];
+        _casefileWeapon = tokens[3];
+        _casefileRoom = tokens[4];
+
+        if(responseType.equals("gameover"))
+        {
+            _accusationResponse = username + " has won the game!";
+        }
+        else // "lost"
+        {
+            _accusationResponse = "You have guessed incorrectly...";
+        }
+    }
+
+    public String getAccusationResponseParts(String part)
+    {
+        if(part.equals("suspect"))
+        {
+            return _casefileSuspect;
+        }
+        else if(part.equals("weapon"))
+        {
+            return  _casefileWeapon;
+        }
+        else if(part.equals("room"))
+        {
+            return _casefileRoom;
+        }
+        else if(part.equals("response"))
+        {
+            return _accusationResponse;
+        }
+        return "";
+    }
 }
