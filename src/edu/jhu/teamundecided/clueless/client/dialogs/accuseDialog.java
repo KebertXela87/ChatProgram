@@ -77,8 +77,7 @@ public class accuseDialog extends JDialog
         accusation.append(_weaponSelected + ":");
         accusation.append(_roomSelected);
 
-//        cac.writeToServer(accusation.toString());
-        System.out.println(accusation);
+        cac.writeToServer(accusation.toString());
 
         cac.getClientApp().getAccusationButton().setEnabled(false);
 

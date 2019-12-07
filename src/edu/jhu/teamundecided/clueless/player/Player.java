@@ -90,7 +90,6 @@ public class Player
 
    public void sendToClient(String message)
    {
-
       if (!isNPC())
       {
          _clientHandler.writeToClient(message);

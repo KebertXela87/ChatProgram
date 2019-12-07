@@ -80,12 +80,14 @@ public class suggestDialog extends JDialog
         suggestion.append(_weaponSelected + ":");
         suggestion.append(DialogController.getInstance().getSuggestionRoom());
 
-//        cac.writeToServer(suggestion.toString());
-        System.out.println(suggestion);
+        cac.writeToServer(suggestion.toString());
 
-        cac.getClientApp().getSuggestButton().setEnabled(false);
+        cac.getClientApp().getMoveButton().setEnabled(false); // can't make a move after suggestion
+        cac.getClientApp().getSuggestButton().setEnabled(false); // can't make another suggestion
 
-        cac.getClientApp().getEndTurnButton().setEnabled(false); // need to wait until suggestion response
+        // need to wait until suggestion response
+        cac.getClientApp().getAccusationButton().setEnabled(false);
+        cac.getClientApp().getEndTurnButton().setEnabled(false);
 
         dispose();
     }

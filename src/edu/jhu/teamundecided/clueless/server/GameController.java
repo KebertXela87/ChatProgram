@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class GameController
 {
-
    private static GameController _gameController = null;
 
    private Server _server;
@@ -22,10 +21,8 @@ public class GameController
    private boolean _gameOver;
    private ArrayList<Player> _players;
 
-
    public GameController(Server server)
    {
-
       _server = server;
       _gameboard = new GameBoard();
       _deckController = new DeckController();
@@ -34,10 +31,8 @@ public class GameController
       _players = new ArrayList<>();
    }
 
-
    public static GameController getInstance(Server server)
    {
-
       if (_gameController == null)
       {
          _gameController = new GameController(server);
@@ -46,24 +41,18 @@ public class GameController
       return _gameController;
    }
 
-
    public Server getGameServer()
    {
-
       return _server;
    }
 
-
    public GameBoard getGameBoard()
    {
-
       return _gameboard;
    }
 
-
    public String getSelectedCharacters()
    {
-
       StringBuilder list = new StringBuilder();
 
       for (Player player : _players)
@@ -71,20 +60,11 @@ public class GameController
          list.append(":").append(player.getCharacterName());
       }
 
-/*      for (ClientHandler client : _server.getCients())
-      {
-         list.append(":").append(client.getPlayer().getCharacterName());
-      }*/
-
       return list.toString();
-
    }
-
 
    public String updateLocations(Player player, String newRoomName)
    {
-
-      System.out.println("Creating moveSprites message...");
       StringBuilder moveSpritesMsg = new StringBuilder("moveSprites:");
 
       Room oldRoom = player.getLocation();
@@ -111,39 +91,31 @@ public class GameController
       return moveSpritesMsg.toString();
    }
 
-
    public ArrayList<Player> getPlayers()
    {
-
       return _players;
    }
 
-
    public Player getNextPlayer()
    {
-
       Player nextPlayer;
 
       do
       {
          _turn = ++_turn % _players.size();
          nextPlayer = _players.get(_turn);
-      } while (nextPlayer.isNPC());
+      } while (nextPlayer.isNPC() || !nextPlayer.getIsActive());
 
       return nextPlayer;
    }
 
-
    public void handleEndTurn()
    {
-
-      // TODO end turn messaging if necessary - Sean
-      // TODO should this be called by the client handler? - Sean
-
       if (!isGameOver())
       {
          startTurn(getNextPlayer());
-      } else
+      }
+      else
       {
          Player winner = getActivePlayers().get(0);
          broadcast(winner.getUserName() + " is the last remaining player.");
@@ -152,41 +124,49 @@ public class GameController
       }
    }
 
-
-   public void handleMoveRequest(Player player, String room)
-   {
-      // TODO - is this a duplicate function of updateLocation?
-      Room destination = _gameboard.findRoom(room);
-      _gameboard.movePlayer(player, destination);
-      //TODO broadcast move to all players
-   }
-
-
    public void handleAccusationCommand(Suggestion accusation)
    {
+      Player currentPlayer = _players.get(_turn);
+      String accuser = currentPlayer.getUserName();
 
-      broadcast(_players.get(_turn).getUserName() + " has made an accusation that " + accusation.toString());
+      broadcast(accuser + " has made an accusation that " + accusation.toString());
 
-      if (_deckController.checkAccusation(accusation))
+      StringBuilder response = new StringBuilder("accuseresponse");
+
+      _gameOver = _deckController.checkAccusation(accusation);
+
+      // Build accusation response message
+      response.append(":").append(_gameOver);
+      response.append(":").append(accuser);
+      response.append(":").append(accusation.getSuspect());
+      response.append(":").append(accusation.getWeapon());
+      response.append(":").append(accusation.getRoom());
+
+      if(_gameOver)
       {
-         _gameOver = true;
-         broadcast(_players.get(_turn).getUserName() + "'s accusation was correct!");
+         // Game Over, Send Response to everyone
+         broadcast(response.toString());
          broadcast("The game is over!");
          endGame();
-      } else
+      }
+      else
       {
-         broadcast(_players.get(_turn).getUserName() + "'s accusation was incorrect!");
-         broadcast(_players.get(_turn).getUserName() + " is now inactive.");
-         _players.get(_turn).setIsActive(false);
+         // Player guessed wrong. Send response just to Player
+         currentPlayer.sendToClient(response.toString());
+         // Let everyone else know of incorrect response through the chat system.
+         broadcast(accuser + "'s accusation was incorrect!");
+         broadcast(accuser + " is now inactive.");
+
+         // Set Player to inactive
+         currentPlayer.setIsActive(false);
       }
 
-      // TODO - trigger end of turn?
+      handleEndTurn();
    }
 
 
    public boolean isGameOver()
    {
-
       if (_gameOver)
       {
          return true;
@@ -200,8 +180,7 @@ public class GameController
 
    private ArrayList<Player> getActivePlayers()
    {
-
-      ArrayList<Player> activePlayers = new ArrayList<Player>();
+      ArrayList<Player> activePlayers = new ArrayList<>();
       for (Player player : _players)
       {
          if (player.getIsActive())
@@ -215,12 +194,12 @@ public class GameController
 
    public void attemptToStart()
    {
-
       if (_players.size() < 3)
       {
          broadcast("Not enough players to start a game (currently have " + _players.size() + ", need at least 3)");
          return;
-      } else
+      }
+      else
       {
          for (Player player : _players)
          {
@@ -235,10 +214,8 @@ public class GameController
       }
    }
 
-
    public void broadcast(String message)
    {
-
       for (Player player : _players)
       {
          player.sendToClient(message);
@@ -248,18 +225,17 @@ public class GameController
 
    private void startGame()
    {
-
       _deckController.dealCards(_players);
 
       rearrangePlayers(); // includes create npcs
 
+      broadcast("gamestarted");
+
       startTurn(getNextPlayer());
    }
 
-
    private void rearrangePlayers()
    {
-
       ArrayList<Player> newPlayers = new ArrayList<>();
       boolean characterFound;
 
@@ -286,7 +262,6 @@ public class GameController
 
       _players = newPlayers;
    }
-
 
    private void startTurn(Player currentPlayer)
    {
@@ -342,17 +317,18 @@ public class GameController
        currentPlayer.sendToClient(startTurnMessage.toString());
    }
 
-
    public boolean disproveSequence(Suggestion suggestion)
    {
       // Move suspect to suggested room
-      updateLocations(getPlayerFromList(suggestion.getSuspect()), _players.get(_turn).getLocation().getRoomName());
+      Player suspect = getPlayerFromList(suggestion.getSuspect());
+      broadcast(updateLocations(suspect, _players.get(_turn).getLocation().getRoomName()));
+      suspect.setMoved(true); // Will allow suspect player to make a suggestion on their next turn without moving first.
 
       int mark = _turn + 1;
 
       Player playerToCheck;
 
-      while ((mark % _players.size()) != _turn)
+      while ((mark = (++mark % _players.size())) != _turn)
       {
          playerToCheck = _players.get(mark);
 
@@ -373,17 +349,14 @@ public class GameController
             else
             {
                broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
-               mark++;
             }
          }
       }
       return false;
    }
 
-
    private void sendDisproveRequest(Player disprovingPlayer, ArrayList<Card> matchingCards)
    {
-
       StringBuilder message = new StringBuilder("disproveSuggestion");
       for (Card card : matchingCards)
       {
@@ -392,34 +365,24 @@ public class GameController
       disprovingPlayer.sendToClient(message.toString());
    }
 
-
    public void revealCard(String card)
    {
-      // TEST CODE
-      _players.get(0).sendToClient("revealedCard:" + card);
-
-//       _players.get(_turn).sendToClient("revealedCard:" + card);
+      _players.get(_turn).sendToClient("revealedCard:" + card);
    }
-
 
    public void addPlayer(Player player)
    {
-
       _players.add(player);
    }
 
-
    public void endGame()
    {
-
       _server.broadcastToAll("Shutting down now");
       _server.shutdown();
    }
 
-
    private Player getPlayerFromList(String name)
    {
-
       for (Player player : _players)
       {
          if (player.getCharacterName().equalsIgnoreCase(name))
@@ -432,15 +395,11 @@ public class GameController
       return createNPC(name);
    }
 
-
    private Player createNPC(String name)
    {
-
       Player npc = new Player(name, getGameBoard().findRoom(name + "startloc"));
       _players.add(npc);
       return npc;
    }
-
-
 }
 

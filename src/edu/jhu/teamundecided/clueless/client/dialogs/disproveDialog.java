@@ -36,7 +36,7 @@ public class disproveDialog extends JDialog
         {
             public void windowClosing(WindowEvent e)
             {
-                onCancel();
+                onCancel(cac);
             }
         });
 
@@ -45,7 +45,7 @@ public class disproveDialog extends JDialog
         {
             public void actionPerformed(ActionEvent e)
             {
-                onCancel();
+                onCancel(cac);
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -71,18 +71,21 @@ public class disproveDialog extends JDialog
         reveal.append(_disproveSelection);
 
         cac.writeToServer(reveal.toString());
-        System.out.println(reveal.toString());
-
-        cac.getClientApp().getSuggestButton().setEnabled(false);
-        cac.getClientApp().getAccusationButton().setEnabled(true);
-        cac.getClientApp().getEndTurnButton().setEnabled(true);
+        System.out.println("Reveal message: " + reveal.toString());
 
         dispose();
     }
 
-    private void onCancel()
+    private void onCancel(ClientAppController cac)
     {
-        // add your code here if necessary
+        // Disprover closed dialog before making a selection
+        // Send one anyway
+        AbstractButton button = DialogController.getInstance().getDisproveButtonGroup().getElements().nextElement();
+        StringBuilder reveal = new StringBuilder("revealCard:");
+        reveal.append(button.getName());
+
+        cac.writeToServer(reveal.toString());
+
         dispose();
     }
 

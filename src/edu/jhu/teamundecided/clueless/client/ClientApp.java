@@ -135,7 +135,6 @@ public class ClientApp
             {
                 controller.writeToServer("readytoplay");
                 _readyButton.setEnabled(false);
-                controller.writeToServer("testDisprove");// TEST CODE
             }
         });
     }
@@ -170,6 +169,12 @@ public class ClientApp
     {
         return _endTurnButton;
     }
+
+    public JButton getPlayerHandButton() { return _handButton; }
+
+    public JButton getNotebookButton() { return _notebookButton; }
+
+    public JTextField getMessageField() { return _messageField; }
 
     public ClientGameBoard getClientGameBoard() { return (ClientGameBoard) _gameBoard; }
 

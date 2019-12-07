@@ -130,6 +130,9 @@ public class ClientAppController
             case "disableCharacter":
                 addToClientDisabledCharacterList(tokens[1]);
                 break;
+            case "gamestarted":
+                DialogController.getInstance().createStartGameDialog(this);
+                break;
             case "startturn":
                 DialogController.getInstance().createStartTurnDialog(this, tokens[1]);
                 break;
@@ -150,6 +153,9 @@ public class ClientAppController
                 break;
             case "revealedCard":
                 DialogController.getInstance().createRevealedDialog(this, tokens[1]);
+                break;
+            case "noreveal":
+                DialogController.getInstance().createNoRevealDialog(this);
                 break;
             case "accuseresponse":
                 handleAccusationResponse(tokens[1]);
@@ -174,9 +180,10 @@ public class ClientAppController
         else
         {
             // display accusation response panel to accuser
-            response = "lost" + tokens[1];
+            response = "lost:" + tokens[1];
         }
 
+        System.out.println("Accusation Response Message: " + response);
         DialogController.getInstance().createAccusationResponsePanel(this,response);
     }
 

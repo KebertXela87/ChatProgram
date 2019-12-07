@@ -5,17 +5,12 @@ import edu.jhu.teamundecided.clueless.client.ClientAppController;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class accusationResponseDialog extends JDialog
+public class norevealDialog extends JDialog
 {
     private JPanel contentPane;
     private JButton _closeButton;
-    private JLabel _suspectIcon;
-    private JLabel _weaponIcon;
-    private JLabel _roomIcon;
-    private JPanel _responsePanel;
-    private JLabel _responseField;
 
-    public accusationResponseDialog(ClientAppController cac)
+    public norevealDialog(ClientAppController cac)
     {
         setContentPane(contentPane);
         setModal(true);
@@ -51,22 +46,9 @@ public class accusationResponseDialog extends JDialog
 
     private void onClose(ClientAppController cac)
     {
-        cac.getClientApp().getMoveButton().setEnabled(false);
-        cac.getClientApp().getSuggestButton().setEnabled(false);
-        cac.getClientApp().getAccusationButton().setEnabled(false);
-        cac.getClientApp().getEndTurnButton().setEnabled(false);
-
-        cac.getClientApp().getMessageField().grabFocus();
+        cac.getClientApp().getAccusationButton().setEnabled(true);
+        cac.getClientApp().getEndTurnButton().setEnabled(true);
 
         dispose();
-    }
-
-    private void createUIComponents()
-    {
-        String filepath = "./src/images/cards/";
-        _suspectIcon = new JLabel(new ImageIcon(filepath + "suspects/" + DialogController.getInstance().getAccusationResponseParts("suspect") + ".jpg"));
-        _weaponIcon = new JLabel(new ImageIcon(filepath + "weapons/" + DialogController.getInstance().getAccusationResponseParts("weapon") + ".jpg"));
-        _roomIcon = new JLabel(new ImageIcon(filepath + "rooms/" + DialogController.getInstance().getAccusationResponseParts("room") + ".jpg"));
-        _responseField = new JLabel(DialogController.getInstance().getAccusationResponseParts("response"));
     }
 }

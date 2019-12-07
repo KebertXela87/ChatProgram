@@ -115,13 +115,13 @@ public class ClientHandler extends Thread
                 handleRevealedCard(tokens[1]);
                 break;
             case "accusation":
-
+                handleAccusstionFromClient(tokens[1]);
                 break;
             case "readytoplay":
                 setIsReady(true);
                 break;
-            case "testDisprove": // TEST CODE
-                writeToClient("disproveSuggestion:hall:mustard");
+            case "endturn":
+                gameController.handleEndTurn();
                 break;
         }
     }
@@ -140,7 +140,20 @@ public class ClientHandler extends Thread
        suggestmsg.append(" has made a suggestion that ").append(suggestion.toString());
        broadcast(suggestmsg.toString());
 
-       boolean wasDisproven = gameController.disproveSequence(suggestion);
+       if(!gameController.disproveSequence(suggestion))
+       {
+           // No one could disprove this client's suggestion
+           writeToClient("noreveal");
+           broadcast("No one could disprove the suggestion made by " + _player.getUserName());
+       }
+   }
+
+   private void handleAccusstionFromClient(String message)
+   {
+       String[] tokens = message.split(":");
+       Suggestion accusation = new Suggestion(tokens[0], tokens[1], tokens[2]);
+
+       gameController.handleAccusationCommand(accusation);
    }
 
    private void handleRevealedCard(String revealedCard)
@@ -168,52 +181,36 @@ public class ClientHandler extends Thread
 
     private void getPlayerHand(String token)
     {
-        //TODO UNCOMMENT THIS CODE ONCE GAME START IS IMPLEMENTED
-//        writeToClient("playerHandDialog" + _player.getPlayerHand().toString());
-
-        // DEMO CODE
-        writeToClient("playerHandDialog:hall:mustard:scarlett:rope:knife:ballroom");
+        writeToClient("playerHandDialog" + _player.getPlayerHand().toString());
     }
 
-    /**
-     * Sets the Client's Player Character and their Starting Location
-     * @param name - the character name to set this client player to
-     */
     public void setPlayerCharacter(String name)
     {
         broadcast("disableCharacter:" + name);
         _player.setCharacterName(name);
         _player.setLocation(gameController.getGameBoard().findRoom(name + "startloc"));
+        _player.setIsActive(true);
     }
 
     private void getSuggestionRoom(String token)
     {
-        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
-//        writeToClient("suggestDialog:" + _player.getLocation().getRoomName());
-
-        // DEMO CODE
-        writeToClient("suggestDialog:hall");
+        writeToClient("suggestDialog:" + _player.getLocation().getRoomName());
     }
 
     private void getPossibleMoves(String name)
     {
-        //TODO UNCOMMENT THIS CODE ONCE ROOM PLACEMENT IS IMPLEMENTED
-//        StringBuilder moves = new StringBuilder("moveDialog");
-//        for (String roomname : _player.getLocation().getPossibleMoves())
-//        {
-//            moves.append(":" + roomname);
-//        }
-//
-//        if(_player.getLocation().getIsHall())
-//        {
-//            moves.append("#").append(database.getHallwayDirections(_player.getLocation().getRoomName()));
-//        }
-//        writeToClient(moves.toString());
+        StringBuilder moves = new StringBuilder("moveDialog");
+        for (String roomname : _player.getLocation().getPossibleMoves())
+        {
+            moves.append(":" + roomname);
+        }
 
-        // Hallway Directions
-
-        // DEMO CODE
-        writeToClient("moveDialog:hallway_1:hallway_2:hallway_4#" + database.getHallwayDirections("hall"));
+        // Check if in hallway, if not - append hallway directions to message
+        if(!_player.getLocation().getIsHall())
+        {
+            moves.append("#").append(database.getHallwayDirections(_player.getLocation().getRoomName()));
+        }
+        writeToClient(moves.toString());
     }
 
     public void updateLocations(String roomName)
@@ -236,11 +233,6 @@ public class ClientHandler extends Thread
         broadcast(name + " has logged off.");
     }
 
-    public BufferedWriter getWriter()
-    {
-        return _writer;
-    }
-
     public void writeToClient(String message)
     {
         try
@@ -256,11 +248,6 @@ public class ClientHandler extends Thread
         }
     }
 
-    public Socket getClientSocket()
-    {
-        return _clientSocket;
-    }
-
     public Player getPlayer()
     {
         return _player;
@@ -272,7 +259,6 @@ public class ClientHandler extends Thread
         _writer.close();
         socket.close();
     }
-
 
     private void setIsReady(boolean isReady)
     {

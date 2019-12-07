@@ -204,21 +204,21 @@ public class DialogController
 
         for (String card : cards)
         {
-            _cardFilepath = "./src/images/cards/";
+            String subdir = "";
             if(Database.getInstance().getCharacterNames().keySet().contains(card))
             {
-                _cardFilepath += "suspects/";
+                subdir += "suspects/";
             }
             else if(Database.getInstance().getWeaponNames().keySet().contains(card))
             {
-                _cardFilepath += "weapons/";
+                subdir += "weapons/";
             }
             else if(Database.getInstance().getRoomNames().keySet().contains(card))
             {
-                _cardFilepath += "rooms/";
+                subdir += "rooms/";
             }
 
-            JLabel temp = new JLabel(new ImageIcon(_cardFilepath + card + ".jpg"));
+            JLabel temp = new JLabel(new ImageIcon(_cardFilepath + subdir + card + ".jpg"));
             playerHandPanel.add(temp);
         }
 
@@ -347,7 +347,6 @@ public class DialogController
 
         revealedCardDir.append(_revealedCard).append(".jpg");
 
-        System.out.println(revealedCardDir.toString());
         return revealedCardDir.toString();
     }
 
@@ -427,5 +426,26 @@ public class DialogController
             return _accusationResponse;
         }
         return "";
+    }
+
+    // NO REVEAL DIALOG
+    public void createNoRevealDialog(ClientAppController controller)
+    {
+        norevealDialog dialog = new norevealDialog(controller);
+        dialog.setTitle("Suggestion Not Disproven!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
+    }
+
+    public void createStartGameDialog(ClientAppController controller)
+    {
+        gameStartedDialog dialog = new gameStartedDialog(controller);
+        dialog.setTitle("The Game Has Started!");
+        dialog.setResizable(false);
+        dialog.pack();
+        dialog.setLocationRelativeTo(controller.getFrame());
+        dialog.setVisible(true);
     }
 }

@@ -49,4 +49,14 @@ public class Suggestion
     {
         return _suspect;
     }
+
+    public String getWeapon()
+    {
+        return _weapon;
+    }
+
+    public String getRoom()
+    {
+        return _room;
+    }
 }

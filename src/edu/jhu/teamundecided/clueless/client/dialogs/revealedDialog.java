@@ -49,6 +49,7 @@ public class revealedDialog extends JDialog
 
     private void onClose(ClientAppController cac)
     {
+        cac.getClientApp().getAccusationButton().setEnabled(true);
         cac.getClientApp().getEndTurnButton().setEnabled(true);
 
         dispose();
