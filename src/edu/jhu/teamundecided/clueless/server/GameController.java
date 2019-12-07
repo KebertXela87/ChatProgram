@@ -324,7 +324,6 @@ public class GameController
       broadcast(updateLocations(suspect, _players.get(_turn).getLocation().getRoomName()));
       suspect.setMoved(true); // Will allow suspect player to make a suggestion on their next turn without moving first.
 
-//      int mark = _turn + 1;
       int mark = _turn;
 
       Player playerToCheck;
@@ -378,8 +377,8 @@ public class GameController
 
    public void endGame()
    {
-      _server.broadcastToAll("Shutting down now");
-      _server.shutdown();
+      _server.broadcastToAll("Closing connection to server...");
+      _server.closeConnections();
    }
 
    private Player getPlayerFromList(String name)

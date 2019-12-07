@@ -58,6 +58,14 @@ public class Server extends Thread
 
     public void shutdown()
     {
+        closeConnections();
+
+        // Close window
+        System.exit(0);
+    }
+
+    public void closeConnections()
+    {
         try
         {
             System.out.println("Running the server close listener!");
@@ -77,9 +85,6 @@ public class Server extends Thread
         {
             ex.printStackTrace();
         }
-
-        // Close window
-        System.exit(0);
     }
 
     public void run()

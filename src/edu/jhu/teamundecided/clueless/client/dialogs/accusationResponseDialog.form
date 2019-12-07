@@ -105,7 +105,6 @@
             </constraints>
             <properties>
               <font name="Copperplate" size="16" style="1"/>
-              <text value="Label"/>
             </properties>
           </component>
         </children>

@@ -67,6 +67,7 @@ public class accusationResponseDialog extends JDialog
         _suspectIcon = new JLabel(new ImageIcon(filepath + "suspects/" + DialogController.getInstance().getAccusationResponseParts("suspect") + ".jpg"));
         _weaponIcon = new JLabel(new ImageIcon(filepath + "weapons/" + DialogController.getInstance().getAccusationResponseParts("weapon") + ".jpg"));
         _roomIcon = new JLabel(new ImageIcon(filepath + "rooms/" + DialogController.getInstance().getAccusationResponseParts("room") + ".jpg"));
+
         _responseField = new JLabel(DialogController.getInstance().getAccusationResponseParts("response"));
     }
 }

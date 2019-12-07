@@ -125,7 +125,7 @@ public class ClientAppController
                 _reader.close();
                 _writer.close();
                 _socket.close();
-                getClientApp().writeToScreen("The Server has closed! The host has logged off!");
+                getClientApp().writeToScreen("The Server has closed!");
                 break;
             case "disableCharacter":
                 addToClientDisabledCharacterList(tokens[1]);
