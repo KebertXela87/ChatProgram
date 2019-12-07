@@ -109,8 +109,8 @@ public class RoomPoints
         _hallwayPositions.put("hallway_4", new Point(400 - spriteCP.getX(),250 - spriteCP.getY()));
         _hallwayPositions.put("hallway_5", new Point(700 - spriteCP.getX(),250 - spriteCP.getY()));
 
-        _hallwayPositions.put("hallway_6", new Point(250 - spriteCP.getX(),350 - spriteCP.getY()));
-        _hallwayPositions.put("hallway_7", new Point(550 - spriteCP.getX(),350 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_6", new Point(250 - spriteCP.getX(),400 - spriteCP.getY()));
+        _hallwayPositions.put("hallway_7", new Point(550 - spriteCP.getX(),400 - spriteCP.getY()));
 
         _hallwayPositions.put("hallway_8", new Point(100 - spriteCP.getX(),550 - spriteCP.getY()));
         _hallwayPositions.put("hallway_9", new Point(400 - spriteCP.getX(),550 - spriteCP.getY()));

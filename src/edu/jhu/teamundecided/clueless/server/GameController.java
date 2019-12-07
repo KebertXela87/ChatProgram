@@ -324,7 +324,8 @@ public class GameController
       broadcast(updateLocations(suspect, _players.get(_turn).getLocation().getRoomName()));
       suspect.setMoved(true); // Will allow suspect player to make a suggestion on their next turn without moving first.
 
-      int mark = _turn + 1;
+//      int mark = _turn + 1;
+      int mark = _turn;
 
       Player playerToCheck;
 
@@ -342,13 +343,13 @@ public class GameController
 
             if (matchingCards.size() > 0)
             {
-               broadcast(playerToCheck.getCharacterName() + " can disprove the suggestion...");
+               broadcast(Database.getInstance().getCharacterName(playerToCheck.getCharacterName()) + " can disprove the suggestion...");
                sendDisproveRequest(playerToCheck, matchingCards);
                return true;
             }
             else
             {
-               broadcast(playerToCheck.getCharacterName() + " has no matching cards to show...");
+               broadcast(Database.getInstance().getCharacterName(playerToCheck.getCharacterName()) + " has no matching cards to show...");
             }
          }
       }

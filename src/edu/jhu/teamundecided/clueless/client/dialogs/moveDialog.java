@@ -85,6 +85,10 @@ public class moveDialog extends JDialog
         if(_moveSelection.startsWith("hallway_"))
         {
             cac.getClientApp().getEndTurnButton().setEnabled(true);
+            if(cac.getClientApp().getSuggestButton().isEnabled())
+            {
+                cac.getClientApp().getSuggestButton().setEnabled(false);
+            }
         }
         else
         {

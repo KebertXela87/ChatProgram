@@ -122,6 +122,7 @@ public class ClientHandler extends Thread
                 break;
             case "endturn":
                 gameController.handleEndTurn();
+                broadcast(tokens[1] + " has ended their turn.");
                 break;
         }
     }
