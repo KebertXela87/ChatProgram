@@ -83,7 +83,7 @@ public class RoomPoints
         //five
         fiveOccupant = new ArrayList<>();
         fiveOccupant.add(new Point(roomCP.getX() - 53, roomCP.getY() - 53));
-        fiveOccupant.add(new Point(roomCP.getX() + 53, roomCP.getY() - 53));
+        fiveOccupant.add(new Point(roomCP.getX() + 3, roomCP.getY() - 53));
         fiveOccupant.add(new Point(roomCP.getX() - 80, roomCP.getY() + 3));
         fiveOccupant.add(new Point(roomCP.getX() - 25, roomCP.getY() + 3));
         fiveOccupant.add(new Point(roomCP.getX() + 30, roomCP.getY() + 3));
