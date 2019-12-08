@@ -141,4 +141,6 @@ public class DeckController
     {
         return _suggestionDeck;
     }
+
+    public ArrayList<Card> getCaseFile() { return _CaseFile; }
 }
