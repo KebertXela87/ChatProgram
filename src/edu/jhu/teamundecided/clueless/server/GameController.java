@@ -231,6 +231,16 @@ public class GameController
 
       broadcast("gamestarted");
 
+      for (Player player : _players)
+      {
+         if (player.isNPC())
+         {
+            broadcast(player.getCharacterName() + " is not being played by anyone");
+         } else
+         {
+            broadcast(player.getCharacterName() + " is being played by " + player.getUserName());
+         }
+      }
       startTurn(getNextPlayer());
    }
 
