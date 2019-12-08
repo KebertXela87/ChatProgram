@@ -70,6 +70,12 @@ public class GameController
       Room oldRoom = player.getLocation();
       Room newRoom = _gameboard.findRoom(newRoomName);
 
+      // Check if old and new rooms are the same
+      if(oldRoom.equals(newRoom))
+      {
+         return player.getCharacterName() + " is already in " + newRoomName;
+      }
+
       // Update Player Object Location
       _gameboard.movePlayer(player, newRoom); // GameBoard Method
       broadcast(player.getCharacterName() + " moved to the " + newRoomName);
