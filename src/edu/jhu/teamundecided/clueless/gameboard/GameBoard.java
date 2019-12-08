@@ -83,15 +83,15 @@ public class GameBoard
         White.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_12)));
         Plum.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_3)));
 
-        study.setAdjacentRooms(new ArrayList<>(Arrays.asList(billiardroom, hallway_1, hallway_3)));
+        study.setAdjacentRooms(new ArrayList<>(Arrays.asList(kitchen, hallway_1, hallway_3)));
         hall.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_1, hallway_2, hallway_4)));
-        lounge.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_2, hallway_5, billiardroom)));
+        lounge.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_2, hallway_5, conservatory)));
         library.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_3, hallway_6, hallway_8)));
         billiardroom.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_4, hallway_6, hallway_7, hallway_9)));
         diningroom.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_5, hallway_7, hallway_10)));
-        conservatory.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_8, hallway_11, billiardroom)));
+        conservatory.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_8, hallway_11, lounge)));
         ballroom.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_9, hallway_11, hallway_12)));
-        kitchen.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_10, hallway_12, billiardroom)));
+        kitchen.setAdjacentRooms(new ArrayList<>(Arrays.asList(hallway_10, hallway_12, study)));
         hallway_1.setAdjacentRooms(new ArrayList<>(Arrays.asList(study, hall)));
         hallway_2.setAdjacentRooms(new ArrayList<>(Arrays.asList(hall, lounge)));
         hallway_3.setAdjacentRooms(new ArrayList<>(Arrays.asList(study, library)));
