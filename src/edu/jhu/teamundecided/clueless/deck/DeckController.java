@@ -2,6 +2,7 @@ package edu.jhu.teamundecided.clueless.deck;
 
 import edu.jhu.teamundecided.clueless.database.Database;
 import edu.jhu.teamundecided.clueless.player.Player;
+import sun.util.resources.ca.CalendarData_ca;
 
 import java.io.IOException;
 import java.util.*;
@@ -142,5 +143,16 @@ public class DeckController
         return _suggestionDeck;
     }
 
-    public ArrayList<Card> getCaseFile() { return _CaseFile; }
+    public String getCaseFileCard(Card.CardType type)
+    {
+        for(Card card : _CaseFile)
+        {
+            if(card.getType().equals(type))
+            {
+                return card.getCardName();
+            }
+        }
+
+        return "";
+    }
 }

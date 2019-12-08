@@ -138,22 +138,9 @@ public class GameController
       // Build accusation response message
       response.append(":").append(_gameOver);
       response.append(":").append(accuser);
-
-      for(Card card : _deckController.getCaseFile())
-      {
-         if(card.getType().equals(Card.CardType.Suspect))
-         {
-            response.append(":").append(card.getCardName());
-         }
-         if(card.getType().equals(Card.CardType.Weapon))
-         {
-            response.append(":").append(card.getCardName());
-         }
-         if(card.getType().equals(Card.CardType.Room))
-         {
-            response.append(":").append(card.getCardName());
-         }
-      }
+      response.append(":").append(_deckController.getCaseFileCard(Card.CardType.Suspect));
+      response.append(":").append(_deckController.getCaseFileCard(Card.CardType.Weapon));
+      response.append(":").append(_deckController.getCaseFileCard(Card.CardType.Room));
 
       if(_gameOver)
       {
