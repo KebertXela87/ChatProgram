@@ -188,6 +188,7 @@ public class ClientHandler extends Thread
     public void setPlayerCharacter(String name)
     {
         broadcast("disableCharacter:" + name);
+        broadcast(_player.getUserName() + " will play " + name);
         _player.setCharacterName(name);
         _player.setLocation(gameController.getGameBoard().findRoom(name + "startloc"));
         _player.setIsActive(true);
